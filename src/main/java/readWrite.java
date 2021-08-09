@@ -46,7 +46,7 @@ public class readWrite {
 
     public boolean regexFilePath(String directory){
 
-        String regex = "^[a-zA-Z]:(\\/(?![\\/\\\\*\"<>?|])[\\w @#$%!~,.\\[\\]()-=+']+\\/?)*$";
+        String regex = "^[a-zA-Z]:((\\/|\\\\)(?![\\/\\\\*\"<>?|])[\\w @#$%!~,.\\[\\]()-=+']+(\\/|\\\\)?)*$";
 
         //The above regex does as follows: Checks for the drive letter, and then colon forward slash. After that, the regex matches any word characters and a few non word characters
         //and then optionally matches a forward slash at the end. The beginning and end position markers allow for the pattern to match the entire string.
