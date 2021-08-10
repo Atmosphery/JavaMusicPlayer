@@ -1,7 +1,5 @@
 package Controllers;
 
-import Drivers.Playlist;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,8 +18,8 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        Playlist playlist = new Playlist();
-        playlist.createNewPlaylist("Playlist1");
+        //Playlist playlist = new Playlist();
+        //playlist.createNewPlaylist("Playlist1");
         launch(args);
     }
 }

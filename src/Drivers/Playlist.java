@@ -1,14 +1,29 @@
 package Drivers;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class Playlist {
     readWrite rw = new readWrite();
-    File playList = null;
+    private ArrayList<File> playList = null;
+    private int playlistIndex = 0;
+    private String songName;
 
-    public void createNewPlaylist(String playlistName) {
+
+    public Playlist(File fileDirectory){
+        try{
+            playList
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public void createNewPlaylist(String playlistName, File fileDirectory) {
        File newPlayList = new File("Playlists\\" + playlistName);
        newPlayList.mkdirs();
-       newPlayList = playList;
+       File[] files = fileDirectory.listFiles();
+
     }
 }
