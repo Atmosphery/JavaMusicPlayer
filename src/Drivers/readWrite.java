@@ -9,7 +9,7 @@ public class readWrite {
 
 
 
-    public File[] readFromDirectory(String directory){
+    public static File[] readFromDirectory(String directory){
 
         File fileDirectory;
 
@@ -31,7 +31,7 @@ public class readWrite {
 
     //Use to write our settings to a simple config file. Recommend we format excessively in program, otherwise we might end up overwriting previous
     //settings.
-    public void writeToDirectory(String input){
+    public static void writeToDirectory(String input){
         try{
             FileWriter writer;
             writer = new FileWriter("config.txt");
@@ -46,7 +46,7 @@ public class readWrite {
 
     }
 
-    public boolean regexFilePath(String directory){
+    public static boolean regexFilePath(String directory){
 
         String regex = "^[a-zA-Z]:((\\/|\\\\)(?![\\/\\\\*\"<>?|])[\\w @#$%!~,.\\[\\]()-=+']+(\\/|\\\\)?)*$";
 
