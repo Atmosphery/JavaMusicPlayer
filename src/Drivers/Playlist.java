@@ -24,7 +24,7 @@ public class Playlist {
 
             for (File song: musicList){
                 String path = song.getAbsolutePath();
-                if (path.endsWith(".mp3") || path.endsWith("mp4") || path.endsWith(".wav") || path.endsWith(".m4a")){
+                if (path.endsWith(".mp3") || path.endsWith(".mp4") || path.endsWith(".wav") || path.endsWith(".m4a")){
                     playList.add(song);
                 }
             }
