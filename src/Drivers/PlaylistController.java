@@ -7,7 +7,7 @@ public class PlaylistController {
     static ArrayList<Playlist> rootPlaylist = new ArrayList<>();
 
     //updates the rootPlaylist to account for the addition of any new playlists
-    public static void updatePlaylistList() {
+    public static void updateRootPlaylist() {
         File[] rootPlaylist = new File("Playlists").listFiles();
         for (File f: rootPlaylist){
             PlaylistController.rootPlaylist.add(new Playlist(f));
@@ -18,7 +18,7 @@ public class PlaylistController {
     public static Playlist createNewPlaylist(String playlistName) {
         File newFile = new File("Playlists\\" + playlistName);
         newFile.mkdirs();
-        updatePlaylistList();
+        updateRootPlaylist();
         return new Playlist(newFile);
     }
 
