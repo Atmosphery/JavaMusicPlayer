@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class Playlist {
-    private ArrayList<File> playList;
+    private ArrayList<Song> playList;
     private int playlistIndex = 0;
     private String playListPath;
     private String playlistName;
@@ -19,11 +19,12 @@ public class Playlist {
         try{
             playListPath = playlistFile.getAbsolutePath();
             playlistName = playlistFile.getName();
-            playList = new ArrayList<File>();
+            playList = new ArrayList<Song>();
             File[] musicList = playlistFile.listFiles();
 
-            for (File song: musicList){
-                String path = song.getAbsolutePath();
+            for (File f: musicList){
+                String path = f.getAbsolutePath();
+                Song song = new Song(f);
                 if (path.endsWith(".mp3") || path.endsWith(".mp4") || path.endsWith(".wav") || path.endsWith(".m4a")){
                     playList.add(song);
                 }
@@ -42,13 +43,13 @@ public class Playlist {
         return playlistName;
     }
 
-    public ArrayList<File> getPlaylist() {
+    public ArrayList<Song> getPlaylist() {
         return playList;
     }
 
     public String getSongName() {
         if (verifyIndex()){
-            return playList.get(playlistIndex).getName();
+            return playList.get(playlistIndex).getTitle();
         }else {
             return "";
         }
@@ -57,7 +58,7 @@ public class Playlist {
 
     public String getSongPath() {
        if (verifyIndex()){
-           return playList.get(playlistIndex).toURI().toString();
+           return playList.get(playlistIndex).getFilePath();
        }else {
            return "";
        }
