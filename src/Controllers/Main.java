@@ -4,22 +4,21 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
-        primaryStage.show();
+    public void start(Stage stage) throws Exception{
+        Pane mainPane = (Pane) FXMLLoader.load(
+                Main.class.getResource("sample.fxml"));
+        stage.setScene(new Scene(mainPane));
+        stage.show();
     }
 
 
     public static void main(String[] args) {
-        //Playlist playlist = new Playlist();
-        //playlist.createNewPlaylist("Playlist1");
         launch(args);
     }
 }
