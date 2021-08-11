@@ -6,36 +6,25 @@ import java.util.ArrayList;
 public class PlaylistController {
     static ArrayList<Playlist> rootPlaylist = new ArrayList<>();
 
-    public static ArrayList<Playlist> getRootPlaylist() {
-        return rootPlaylist;
-    }
-
-    public static void setRootPlaylist(ArrayList<Playlist> rootPlaylist) {
-        PlaylistController.rootPlaylist = rootPlaylist;
-    }
-
     //updates the rootPlaylist to account for the addition of any new playlists
-    public static void updateRootPlaylist() {
+    public static void updatePlaylistList() {
         File[] rootPlaylist = new File("Playlists").listFiles();
-        ArrayList<Playlist> temp = new ArrayList<>();
         for (File f: rootPlaylist){
-           temp.add(new Playlist(f));
+            PlaylistController.rootPlaylist.add(new Playlist(f));
         }
-        setRootPlaylist(temp);
     }
 
     //Creates a playlist and the required directory as well as returning the new Playlist Object
     public static Playlist createNewPlaylist(String playlistName) {
         File newFile = new File("Playlists\\" + playlistName);
         newFile.mkdirs();
-        updateRootPlaylist();
+        updatePlaylistList();
         return new Playlist(newFile);
     }
 
     //Lists all of the playlists in the rootPlaylist directory
     public static File[] readAndListPlayLists() {
         File rootPlaylist = new File("Playlists");
-        updateRootPlaylist();
         return rootPlaylist.listFiles();
     }
 
@@ -55,7 +44,7 @@ public class PlaylistController {
         File[] playlistContents = playlistDelete.listFiles();
         if (playlistContents != null) {
             for (File f: playlistContents){
-                    deletePlaylist(f);
+                deletePlaylist(f);
             }
         }
         return playlistDelete.delete();
