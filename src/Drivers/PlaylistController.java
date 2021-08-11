@@ -14,6 +14,14 @@ public class PlaylistController {
         PlaylistController.rootPlaylist = rootPlaylist;
     }
 
+    public static void saveRootPlaylist(ArrayList<Playlist> playlists) {
+        readWrite.writeToDirectory(playlists, "Playlists\\playlists.txt");
+    }
+
+    public static void loadPlaylistObject() {
+        readWrite.deserializePlaylist("Playlists\\playlists.txt");
+    }
+
     //updates the rootPlaylist to account for the addition of any new playlists
     public static void updateRootPlaylist() {
         File[] rootPlaylist = new File("Playlists").listFiles();
@@ -60,6 +68,8 @@ public class PlaylistController {
         }
         return playlistDelete.delete();
     }
+
+
 
 
 }
