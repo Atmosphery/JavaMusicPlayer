@@ -10,15 +10,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -33,17 +31,17 @@ public class Controller implements Initializable {
     private MediaPlayer mediaPlayer;
     private Media media;
 
-    Stage window;
+
     @FXML
     private Button pausePlay;
     @FXML
     private Button repeat;
     @FXML
     private Slider sliderVolume;
-    @FXML
-    private TableView<Playlist> playlistTable;
-    @FXML
-    private TableView<Song> songTable;
+
+    private ListView<Playlist> listView;
+
+
 
 
 
@@ -57,21 +55,8 @@ public class Controller implements Initializable {
 
         System.out.println("Starting up!");
         //Playlist Column
-        TableColumn<Playlist, String> playlists = new TableColumn("Playlists");
-        playlistTable.getColumns().add(playlists);
-        ObservableList<Playlist> playlistData = getPlaylist();
-        playlists.setCellValueFactory(new PropertyValueFactory<Playlist, String>("playlistName"));
-        playlistTable.setItems(playlistData);
 
-
-
-
-
-
-
-
-
-        media = new Media(new File("C:\\Users\\abecc\\Documents\\GitHub\\JavaMusicPlayer\\Playlists\\Playlist1\\Powersurge15.mp3").toURI().toString());
+        media = new Media(new File("C:\\Test\\Powersurge15.mp3").toURI().toString());
         mediaPlayer = new MediaPlayer(media);
         mediaView.setMediaPlayer(mediaPlayer);
         mediaPlayer.setOnEndOfMedia(() -> {
