@@ -58,7 +58,6 @@ public class readWrite {
         catch (Exception e) {
             e.printStackTrace();
         }
-
         return playlists;
     }
 

@@ -1,8 +1,13 @@
 package Drivers;
 
-import java.io.File;
+import javafx.scene.media.Media;
+import javafx.util.Duration;
 
-public class Song {
+import java.io.File;
+import java.io.Serializable;
+import java.net.URL;
+
+public class Song implements Serializable {
     File song;
     String filePath;
     String title;
@@ -33,7 +38,13 @@ public class Song {
 
 
     public void setSong(File song) {
-        this.song = song;
+        if(song != null){
+            this.song = song;
+
+        }else {
+            throw new IllegalArgumentException("Song file cannot be null");
+        }
+
     }
 
     public void setFilePath(String filePath) {

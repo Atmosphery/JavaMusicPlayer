@@ -1,24 +1,27 @@
 package Controllers;
 
 
-
-
-import Drivers.Playlist;
-import Drivers.PlaylistController;
-
-import java.util.ArrayList;
-
 public class testMain {
     public static void main(String[] args) {
+        PlaylistController plc = new PlaylistController();
+
+        plc.importPlaylist("Playlists\\Playlist1");
+        System.out.println(plc.readAndListPlayLists());
+
+        String name = plc.readSinglePlaylist("Playlist1").listAllSongs();
+        System.out.println(name);
+
+        plc.createNewPlaylist("MyPlaylist");
+        System.out.println(plc.readAndListPlayLists());
+//
+//        plc.deletePlaylist("MyPlaylist");
+//        System.out.println(plc.readAndListPlayLists());
+//
+        plc.saveRootPlaylist("Playlists\\playlists.txt");
+
+        plc.loadRootPlaylist("Playlists\\playlists.txt");
+        System.out.println(plc.readAndListPlayLists());
 
 
-
-        PlaylistController.updateRootPlaylist();
-        Playlist p1 = PlaylistController.readSinglePlaylist("Playlist2");
-        Playlist p2 = PlaylistController.createNewPlaylist("TheBestList");
-        ArrayList<Playlist> f = PlaylistController.getRootPlaylist();
-        for(Playlist p: f) {
-            System.out.println(p.getPlayListPath());
-        }
     }
 }
