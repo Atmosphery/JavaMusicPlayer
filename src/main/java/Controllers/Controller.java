@@ -2,11 +2,8 @@ package Controllers;
 
 import Drivers.Playlist;
 import Drivers.PlaylistController;
-import Drivers.Song;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -38,12 +35,8 @@ public class Controller implements Initializable {
     private Button repeat;
     @FXML
     private Slider sliderVolume;
-
-    private ListView<Playlist> listView;
-
-
-
-
+    @FXML
+    private ListView<String> PlaylistView;
 
 
     int repeatAmt = 0;
@@ -55,6 +48,15 @@ public class Controller implements Initializable {
 
         System.out.println("Starting up!");
         //Playlist Column
+
+
+        PlaylistController.loadRootPlaylist("playlists.txt");
+        PlaylistController.importPlaylist("Playlists\\Playlist2");
+        ArrayList<Playlist> playlists = PlaylistController.getRootPlaylist();
+        for (Playlist p : playlists){
+            PlaylistView.getItems().add(p.getPlaylistName());
+        }
+
 
         media = new Media(new File("C:\\Test\\Powersurge15.mp3").toURI().toString());
         mediaPlayer = new MediaPlayer(media);
@@ -81,24 +83,6 @@ public class Controller implements Initializable {
                 mediaPlayer.setVolume(sliderVolume.getValue() / 100);
             }
         });
-    }
-
-    public ObservableList<Playlist> getPlaylist() {
-        ObservableList<Playlist> playlistsOBL = FXCollections.observableArrayList();
-        ArrayList<Playlist> playlists = PlaylistController.getRootPlaylist();
-        for (Playlist p : playlists){
-            playlistsOBL.add(p);
-        }
-        return playlistsOBL;
-    }
-
-    public ObservableList<Song> getSongs(Playlist targetPlaylist) {
-        ObservableList<Song> songsOBL = FXCollections.observableArrayList();
-        ArrayList<Playlist> playlists = PlaylistController.getRootPlaylist();
-        int index = playlists.indexOf(targetPlaylist);
-        ArrayList<Song> songs = playlists.get(index).getSongs();
-        songsOBL.addAll(songs);
-        return songsOBL;
     }
 
     @FXML
