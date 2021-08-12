@@ -1,10 +1,15 @@
 package Drivers;
 
+import javafx.beans.property.SimpleStringProperty;
+
 import java.io.File;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Playlist implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 7618249259810837353L;
     private ArrayList<Song> playList;
     private int playlistIndex = 0;
     private String playlistName;
@@ -19,7 +24,7 @@ public class Playlist implements Serializable {
     //Constructor for importing a directory playlist into a Playlist object
     public Playlist(File playlistFile){
         try{
-            playlistName = playlistFile.getName();
+            this.playlistName = playlistFile.getName();
             playList = new ArrayList<Song>();
             File[] musicList = playlistFile.listFiles();
 
@@ -56,7 +61,7 @@ public class Playlist implements Serializable {
         if (verifyIndex()){
             return playList.get(playlistIndex).getTitle();
         }else {
-            return "";
+            return "Song not found";
         }
 
     }
@@ -79,6 +84,7 @@ public class Playlist implements Serializable {
     }
 
     public void setPlaylistName(String playlistName) {
+
         this.playlistName = playlistName;
     }
 
@@ -86,7 +92,11 @@ public class Playlist implements Serializable {
         return playlistName;
     }
 
-    public ArrayList<Song> getPlaylist() {
+    public ArrayList<Song> getPlayList() {
+        return playList;
+    }
+
+    public ArrayList<Song> getSongs() {
         return playList;
     }
 

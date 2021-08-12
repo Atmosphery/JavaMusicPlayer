@@ -6,5 +6,6 @@ module com.example.musicplayer {
 
 
     opens Controllers to javafx.fxml;
+    opens Drivers to java.base;
     exports Controllers;
 }

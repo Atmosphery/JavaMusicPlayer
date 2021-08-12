@@ -51,7 +51,7 @@ public class readWrite {
             FileInputStream fis = new FileInputStream(directory);
             ObjectInputStream ois = new ObjectInputStream(fis);
 
-            playlists = (ArrayList) ois.readObject();
+            playlists = (ArrayList<Playlist>) ois.readObject();
             ois.close();
             fis.close();
         }

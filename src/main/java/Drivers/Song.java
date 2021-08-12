@@ -1,13 +1,17 @@
 package Drivers;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.media.Media;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.io.Serial;
 import java.io.Serializable;
 import java.net.URL;
 
 public class Song implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 4456821371902977809L;
     File song;
     String filePath;
     String title;
@@ -20,10 +24,11 @@ public class Song implements Serializable {
 
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {
+
         this.title = title;
     }
 
