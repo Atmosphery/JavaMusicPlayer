@@ -4,62 +4,65 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class PlaylistController {
-    static ArrayList<Playlist> rootPlaylist = new ArrayList<>();
+    private ArrayList<Playlist> rootPlaylist = new ArrayList<>();
 
-    public static ArrayList<Playlist> getRootPlaylist() {
+    //Creates a playlist and adds it to rootPlaylist Array
+    public void createNewPlaylist(String playlistName) {
+        Playlist p = new Playlist(playlistName);
+        rootPlaylist.add(p);
+    }
+
+    public void importPlaylist(String playlistPath) {
+        File newPlaylistFile = new File(playlistPath);
+        Playlist newPlaylist = new Playlist(newPlaylistFile);
+        rootPlaylist.add(newPlaylist);
+    }
+
+    //Returns rootPlaylist as ArrayList
+    public ArrayList<Playlist> getRootPlaylist() {
         return rootPlaylist;
     }
 
-    public static void setRootPlaylist(ArrayList<Playlist> rootPlaylist) {
-        PlaylistController.rootPlaylist = rootPlaylist;
+    //Loads target serialized playlist file
+    public void loadRootPlaylist(String playlistPath) {
+        this.rootPlaylist =  readWrite.deserializePlaylist(playlistPath);
     }
 
-    //updates the rootPlaylist to account for the addition of any new playlists
-    public static void updateRootPlaylist() {
-        File[] rootPlaylist = new File("Playlists").listFiles();
-        ArrayList<Playlist> temp = new ArrayList<>();
-        for (File f: rootPlaylist){
-            temp.add(new Playlist(f));
+    //Saves rootPlaylist as a serialized file to target directory
+    public void saveRootPlaylist(String playlistPath) {
+        readWrite.writeToDirectory(rootPlaylist, playlistPath);
+    }
+
+    //Lists all of the playlists in the rootPlaylist Array
+    public String readAndListPlayLists() {
+        StringBuilder sb = new StringBuilder();
+        for(Playlist p: rootPlaylist){
+            sb.append(p.getPlaylistName());
+            sb.append("\n");
         }
-        setRootPlaylist(temp);
-    }
-
-    //Creates a playlist and the required directory as well as returning the new Playlist Object
-    public static Playlist createNewPlaylist(String playlistName) {
-        File newFile = new File("Playlists\\" + playlistName);
-        newFile.mkdirs();
-        updateRootPlaylist();
-        return new Playlist(newFile);
-    }
-
-    //Lists all of the playlists in the rootPlaylist directory
-    public static File[] readAndListPlayLists() {
-        File rootPlaylist = new File("Playlists");
-        updateRootPlaylist();
-        return rootPlaylist.listFiles();
+        return sb.toString();
     }
 
     //returns a single Playlist by passing in a playlist name
-    public static Playlist readSinglePlaylist(String nameOfPlayList){
-        File[] playlists = new File("Playlists").listFiles();
-        for (File f: playlists){
-            if (f.getName().equals(nameOfPlayList)){
-                return new Playlist(f);
+    public Playlist readSinglePlaylist(String nameOfPlayList){
+
+        for (Playlist p: rootPlaylist){
+            if (p.getPlaylistName().equals(nameOfPlayList)){
+                return p;
+            }else {
+                throw new IllegalArgumentException("Playlist " + nameOfPlayList + " does not exist");
             }
         }
         return null;
     }
 
     //deletes a playlist, no matter how many levels of sub-folders it contains
-    public static boolean deletePlaylist(File playlistDelete){
-        File[] playlistContents = playlistDelete.listFiles();
-        if (playlistContents != null) {
-            for (File f: playlistContents){
-                deletePlaylist(f);
+    public void deletePlaylist(String nameOfPlayList){
+        for (Playlist p: rootPlaylist){
+            if (p.getPlaylistName().equals(nameOfPlayList)){
+                rootPlaylist.remove(p);
+                break;
             }
         }
-        return playlistDelete.delete();
     }
-
-
 }

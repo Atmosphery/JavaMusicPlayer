@@ -1,29 +1,31 @@
 package Drivers;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Playlist {
-    private ArrayList<File> playList;
+public class Playlist implements Serializable {
+    private ArrayList<Song> playList;
     private int playlistIndex = 0;
-    private String playListPath;
     private String playlistName;
 
-// Constructor for when a playlist is null
 
-    public Playlist(){
-
+    //Constructor for creating an empty Playlist object
+    public Playlist(String playlistName){
+        setPlayList(new ArrayList<>());
+        setPlaylistName(playlistName);
     }
 
+    //Constructor for importing a directory playlist into a Playlist object
     public Playlist(File playlistFile){
         try{
-            playListPath = playlistFile.getAbsolutePath();
             playlistName = playlistFile.getName();
-            playList = new ArrayList<File>();
+            playList = new ArrayList<Song>();
             File[] musicList = playlistFile.listFiles();
 
-            for (File song: musicList){
-                String path = song.getAbsolutePath();
+            for (File f: musicList){
+                Song song = new Song(f);
+                String path = song.getFilePath();
                 if (path.endsWith(".mp3") || path.endsWith(".mp4") || path.endsWith(".wav") || path.endsWith(".m4a")){
                     playList.add(song);
                 }
@@ -34,33 +36,58 @@ public class Playlist {
         }
     }
 
-    public String getPlayListPath() {
-        return playListPath;
+    //List all songs withing the playlist as a string
+    public String listAllSongs() {
+        StringBuilder sb = new StringBuilder();
+        for(Song s: playList){
+            sb.append(s.getTitle());
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    // Adds a single song object to playlist array
+    public void addSongToPlaylist(Song song) {
+        playList.add(song);
+    }
+
+    // Returns name of current song
+    public String getSongName() {
+        if (verifyIndex()){
+            return playList.get(playlistIndex).getTitle();
+        }else {
+            return "";
+        }
+
+    }
+
+    // Returns path of current song
+    public String getSongPath() {
+        if (verifyIndex()){
+            return playList.get(playlistIndex).getFilePath();
+        }else {
+            return "";
+        }
+    }
+
+    public void setPlayList(ArrayList<Song> playList) {
+        this.playList = playList;
+    }
+
+    public void setPlaylistIndex(int playlistIndex) {
+        this.playlistIndex = playlistIndex;
+    }
+
+    public void setPlaylistName(String playlistName) {
+        this.playlistName = playlistName;
     }
 
     public String getPlaylistName() {
         return playlistName;
     }
 
-    public ArrayList<File> getPlaylist() {
+    public ArrayList<Song> getPlaylist() {
         return playList;
-    }
-
-    public String getSongName() {
-        if (verifyIndex()){
-            return playList.get(playlistIndex).getName();
-        }else {
-            return "";
-        }
-
-    }
-
-    public String getSongPath() {
-        if (verifyIndex()){
-            return playList.get(playlistIndex).toURI().toString();
-        }else {
-            return "";
-        }
     }
 
     public void changePlaylistIndex(int change) {

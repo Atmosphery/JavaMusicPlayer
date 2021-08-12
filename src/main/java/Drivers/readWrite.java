@@ -1,7 +1,7 @@
 package Drivers;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,19 +31,34 @@ public class readWrite {
 
     //Use to write our settings to a simple config file. Recommend we format excessively in program, otherwise we might end up overwriting previous
     //settings.
-    public static void writeToDirectory(String input){
+    public static void writeToDirectory(ArrayList<Playlist> playlistArrayList, String directory){
         try{
-            FileWriter writer;
-            writer = new FileWriter("config.txt");
 
-            writer.write(input);
-
-            writer.close();
+            FileOutputStream fos = new FileOutputStream(directory);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(playlistArrayList);
+            oos.close();
+            fos.close();
         }catch(Exception e){
             e.printStackTrace();
         }
+    }
 
+    public static ArrayList<Playlist> deserializePlaylist(String directory) {
+        ArrayList<Playlist> playlists = new ArrayList<>();
 
+        try {
+            FileInputStream fis = new FileInputStream(directory);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+
+            playlists = (ArrayList) ois.readObject();
+            ois.close();
+            fis.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return playlists;
     }
 
     public static boolean regexFilePath(String directory){
