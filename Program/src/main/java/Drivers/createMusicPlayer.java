@@ -18,7 +18,7 @@ public class createMusicPlayer {
     public createMusicPlayer(File song){
         media = new Media(song.toURI().toString());
 
-        media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object > change) -> {
+        media.getMetadata().addListener((MapChangeListener.Change<? extends String, ?> change) -> {
             if(change.wasAdded()){
                 if("artist".equals(change.getKey())){
                     artist = change.getValueAdded().toString();
