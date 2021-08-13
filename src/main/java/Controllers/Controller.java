@@ -2,14 +2,19 @@ package Controllers;
 
 import Drivers.Playlist;
 import Drivers.PlaylistController;
+import Drivers.Song;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -36,8 +41,9 @@ public class Controller implements Initializable {
     @FXML
     private Slider sliderVolume;
     @FXML
-    private ListView<String> PlaylistView;
-
+    private ListView<String> playlistView;
+    @FXML
+    private ListView<String> songView;
 
     int repeatAmt = 0;
     boolean isPaused = false;
@@ -52,13 +58,23 @@ public class Controller implements Initializable {
 
         PlaylistController.loadRootPlaylist("playlists.txt");
         PlaylistController.importPlaylist("Playlists\\Playlist2");
+
         ArrayList<Playlist> playlists = PlaylistController.getRootPlaylist();
+        ObservableList<String> list = FXCollections.observableArrayList();
         for (Playlist p : playlists){
-            PlaylistView.getItems().add(p.getPlaylistName());
+            list.add(p.getPlaylistName());
         }
+        playlistView.setItems(list);
+        playlistView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+
+                onClickTableItem(mouseEvent);
+            }
+        });
 
 
-        media = new Media(new File("C:\\Test\\Powersurge15.mp3").toURI().toString());
+        media = new Media(new File("C:\\Users\\abecc\\Documents\\GitHub\\JavaMusicPlayer\\Playlists\\Playlist1\\SLOW DANCING IN THE DARK.mp3").toURI().toString());
         mediaPlayer = new MediaPlayer(media);
         mediaView.setMediaPlayer(mediaPlayer);
         mediaPlayer.setOnEndOfMedia(() -> {
@@ -85,13 +101,8 @@ public class Controller implements Initializable {
         });
     }
 
-    @FXML
-    protected void onClickTableItem() {
 
-//        TableColumn<Song, String> songs = new TableColumn("Songs");
-//        songTable.getColumns().add(songs);
 
-    }
 
 
     @FXML
@@ -132,5 +143,26 @@ public class Controller implements Initializable {
                 repeat.setText("R3");
                 repeatAmt = 0;
         }
+    }
+
+    @FXML
+    public void onClickTableItem(MouseEvent mouse) {
+        songView.getItems().clear();
+        String name = playlistView.getSelectionModel().getSelectedItem();
+            if (name != null){
+                ArrayList<Playlist> playlist = PlaylistController.getRootPlaylist();
+                ArrayList<Song> songs = new ArrayList<>();
+
+                for (Playlist p: playlist){
+                    if (p.getPlaylistName().equals(name)){
+
+                        songs = p.getSongs();
+                        for (Song s: songs){
+                            songView.getItems().add(s.getTitle());
+                        }
+                    }
+                }
+            }
+
     }
 }

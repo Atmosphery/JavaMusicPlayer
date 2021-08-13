@@ -16,11 +16,11 @@ public class MainApplication extends Application {
         PlaylistController.importPlaylist("Playlists\\Playlist1");
         PlaylistController.saveRootPlaylist("playlists.txt");
         PlaylistController.loadRootPlaylist("playlists.txt");
-        Media m = null;
+
 
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 400, 500);
-        stage.setTitle("Hello!");
+        stage.setTitle("The Best Java Music Player");
         stage.setScene(scene);
         stage.show();
     }
