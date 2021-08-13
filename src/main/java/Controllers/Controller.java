@@ -47,6 +47,9 @@ public class Controller implements Initializable {
 
     int repeatAmt = 0;
     boolean isPaused = false;
+    File currentSong;
+    int playListIndex = 0;
+    int songIndex = 0;
 
 
     @Override
@@ -58,6 +61,7 @@ public class Controller implements Initializable {
 
         PlaylistController.loadRootPlaylist("playlists.txt");
         PlaylistController.importPlaylist("Playlists\\Playlist2");
+        //PlaylistController.saveRootPlaylist("playlists.txt");
 
         ArrayList<Playlist> playlists = PlaylistController.getRootPlaylist();
         ObservableList<String> list = FXCollections.observableArrayList();
@@ -73,8 +77,11 @@ public class Controller implements Initializable {
             }
         });
 
+        ArrayList<Playlist> p = PlaylistController.getRootPlaylist();
+        ArrayList<Song> s = p.get(playListIndex).getSongs();
+        currentSong = s.get(songIndex).getSong();
 
-        media = new Media(new File("C:\\Users\\abecc\\Documents\\GitHub\\JavaMusicPlayer\\Playlists\\Playlist1\\SLOW DANCING IN THE DARK.mp3").toURI().toString());
+        media = new Media(currentSong.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
         mediaView.setMediaPlayer(mediaPlayer);
         mediaPlayer.setOnEndOfMedia(() -> {
