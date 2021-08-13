@@ -56,6 +56,7 @@ public class Controller implements Initializable {
     int playListIndex = 0;
     int songIndex = 0;
     String savePath = "playlists.txt";
+    Playlist currentPlaylist;
 
 
     @Override
@@ -79,10 +80,18 @@ public class Controller implements Initializable {
         playlistView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-
                 onClickTableItem(mouseEvent);
             }
         });
+
+        songView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                onClickSongItem(mouseEvent);
+            }
+        });
+
+
 
         ArrayList<Playlist> p = PlaylistController.getRootPlaylist();
         ArrayList<Song> s = p.get(playListIndex).getSongs();
@@ -116,7 +125,44 @@ public class Controller implements Initializable {
         });
     }
 
+    @FXML
+    public void onClickTableItem(MouseEvent mouse) {
+        songView.getItems().clear();
+        String name = playlistView.getSelectionModel().getSelectedItem();
+        if (name != null){
+            ArrayList<Playlist> playlist = PlaylistController.getRootPlaylist();
+            ArrayList<Song> songs = new ArrayList<>();
 
+            for (Playlist p: playlist){
+                if (p.getPlaylistName().equals(name)){
+                    currentPlaylist = p;
+                    songs = p.getSongs();
+                    for (Song s: songs){
+                        songView.getItems().add(s.getTitle());
+                    }
+                }
+            }
+        }
+    }
+
+    @FXML
+    public void onClickSongItem(MouseEvent mouse) {
+        isPaused = true;
+        pausePlay.setText("||");
+        mediaPlayer.pause();
+        String name = songView.getSelectionModel().getSelectedItem();
+        if(name != null) {
+            ArrayList<Song> songs = currentPlaylist.getSongs();
+            for (Song s: songs){
+                if(s.getTitle().equals(name)) {
+                    currentSong = s.getSong();
+                    media = new Media(currentSong.toURI().toString());
+                    mediaPlayer = new MediaPlayer(media);
+                    mediaView.setMediaPlayer(mediaPlayer);
+                }
+            }
+        }
+    }
 
 
 
@@ -161,24 +207,5 @@ public class Controller implements Initializable {
         }
     }
 
-    @FXML
-    public void onClickTableItem(MouseEvent mouse) {
-        songView.getItems().clear();
-        String name = playlistView.getSelectionModel().getSelectedItem();
-            if (name != null){
-                ArrayList<Playlist> playlist = PlaylistController.getRootPlaylist();
-                ArrayList<Song> songs = new ArrayList<>();
 
-                for (Playlist p: playlist){
-                    if (p.getPlaylistName().equals(name)){
-
-                        songs = p.getSongs();
-                        for (Song s: songs){
-                            songView.getItems().add(s.getTitle());
-                        }
-                    }
-                }
-            }
-
-    }
 }
