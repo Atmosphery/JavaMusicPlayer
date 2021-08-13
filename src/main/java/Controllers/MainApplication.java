@@ -13,10 +13,6 @@ import java.io.IOException;
 public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        PlaylistController.importPlaylist("Playlists\\Playlist1");
-        PlaylistController.saveRootPlaylist("playlists.txt");
-        PlaylistController.loadRootPlaylist("playlists.txt");
-
 
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 400, 500);

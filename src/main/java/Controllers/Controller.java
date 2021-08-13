@@ -3,6 +3,7 @@ package Controllers;
 import Drivers.Playlist;
 import Drivers.PlaylistController;
 import Drivers.Song;
+import Drivers.createMusicPlayer;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
@@ -14,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
+    createMusicPlayer player;
 
     @FXML
     private MediaView mediaView;
@@ -44,12 +47,15 @@ public class Controller implements Initializable {
     private ListView<String> playlistView;
     @FXML
     private ListView<String> songView;
+    @FXML
+    private TextArea metaDisplay;
 
     int repeatAmt = 0;
     boolean isPaused = false;
     File currentSong;
     int playListIndex = 0;
     int songIndex = 0;
+    String savePath = "playlists.txt";
 
 
     @Override
@@ -59,9 +65,10 @@ public class Controller implements Initializable {
         //Playlist Column
 
 
-        PlaylistController.loadRootPlaylist("playlists.txt");
-        PlaylistController.importPlaylist("Playlists\\Playlist2");
-        //PlaylistController.saveRootPlaylist("playlists.txt");
+
+        //PlaylistController.importAllPlaylists("Playlists");
+        //PlaylistController.saveRootPlaylist(savePath);
+        PlaylistController.loadRootPlaylist(savePath);
 
         ArrayList<Playlist> playlists = PlaylistController.getRootPlaylist();
         ObservableList<String> list = FXCollections.observableArrayList();
@@ -79,6 +86,7 @@ public class Controller implements Initializable {
 
         ArrayList<Playlist> p = PlaylistController.getRootPlaylist();
         ArrayList<Song> s = p.get(playListIndex).getSongs();
+        //player = new createMusicPlayer(s.get(songIndex).getSong());
         currentSong = s.get(songIndex).getSong();
 
         media = new Media(currentSong.toURI().toString());
@@ -123,6 +131,7 @@ public class Controller implements Initializable {
             mediaPlayer.play();
             pausePlay.setText(">");
         }
+
     }
 
     @FXML

@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.media.MediaView?>
@@ -39,7 +40,7 @@
                </AnchorPane>
              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                   <children>
-                     <Button mnemonicParsing="false" text="Create New Playlist" />
+                     <Button layoutX="7.0" layoutY="7.0" mnemonicParsing="false" text="Create New Playlist" />
                   </children>
                </AnchorPane>
            </items>
@@ -47,6 +48,7 @@
       </children>
    </VBox>
    <MediaView fx:id="mediaView" visible="false" />
+   <TextArea fx:id="metaDisplay" prefHeight="41.0" prefWidth="346.0" />
    <Slider fx:id="sliderVolume" />
    <Button mnemonicParsing="false" onAction="#onFileButtonPressed" text="File Choose" />
    <Button fx:id="repeat" mnemonicParsing="false" onAction="#onRepeatButtonPressed" text="R1" />

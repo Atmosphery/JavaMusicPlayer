@@ -34,13 +34,13 @@ public class PlaylistController {
     }
 
     //Lists all of the playlists in the rootPlaylist Array
-    public static String readAndListPlayLists() {
-        StringBuilder sb = new StringBuilder();
-        for(Playlist p: rootPlaylist){
-            sb.append(p.getPlaylistName());
-            sb.append("\n");
+    public static void importAllPlaylists(String path) {
+        File temp = new File(path);
+        File[] tempArr = temp.listFiles();
+        for(File f: tempArr){
+            Playlist newPlaylist = new Playlist(f);
+            rootPlaylist.add(newPlaylist);
         }
-        return sb.toString();
     }
 
     //returns a single Playlist by passing in a playlist name
