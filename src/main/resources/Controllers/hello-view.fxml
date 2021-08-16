@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Slider?>
@@ -50,8 +51,14 @@
    <MediaView fx:id="mediaView" visible="false" />
    <TextArea fx:id="metaDisplay" prefHeight="41.0" prefWidth="346.0" />
    <Slider fx:id="sliderVolume" />
-   <Button mnemonicParsing="false" onAction="#onFileButtonPressed" text="File Choose" />
-   <Button fx:id="repeat" mnemonicParsing="false" onAction="#onRepeatButtonPressed" text="R1" />
+   <ButtonBar prefHeight="40.0" prefWidth="381.0">
+     <buttons>
+         <Button mnemonicParsing="false" onAction="#onFileButtonPressed" text="File Choose" />
+         <Button fx:id="repeat" mnemonicParsing="false" onAction="#onRepeatButtonPressed" text="R1" />
+         <Button fx:id="nextButton" mnemonicParsing="false" onAction="#changeToNextSong" text="Next" />
+       <Button fx:id="prevButton" mnemonicParsing="false" onAction="#changeToPrevSong" text="Prev." />
+     </buttons>
+   </ButtonBar>
 
     <Label fx:id="welcomeText" />
     <Button fx:id="pausePlay" onAction="#onPauseButtonPressed" text="Play!" />
