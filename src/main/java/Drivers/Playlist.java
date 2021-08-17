@@ -13,17 +13,20 @@ public class Playlist implements Serializable {
     private ArrayList<Song> playList;
     private int playlistIndex = 0;
     private String playlistName;
+    private File playlistFile;
 
 
     //Constructor for creating an empty Playlist object
     public Playlist(String playlistName){
         setPlayList(new ArrayList<>());
         setPlaylistName(playlistName);
+        playlistFile = new File("Playlists\\" + playlistName);
     }
 
     //Constructor for importing a directory playlist into a Playlist object
     public Playlist(File playlistFile){
         try{
+            this.playlistFile = playlistFile;
             this.playlistName = playlistFile.getName();
             playList = new ArrayList<Song>();
             File[] musicList = playlistFile.listFiles();
@@ -73,6 +76,10 @@ public class Playlist implements Serializable {
         }else {
             return "";
         }
+    }
+
+    public File getPlaylistFile() {
+        return playlistFile;
     }
 
     public void setPlayList(ArrayList<Song> playList) {

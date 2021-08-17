@@ -7,8 +7,10 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.media.MediaView?>
 
@@ -59,15 +61,20 @@
    </AnchorPane>
 
     <Label fx:id="welcomeText" />
-   <HBox>
-      <children>
-         <Slider fx:id="sliderVolume" prefHeight="14.0" prefWidth="161.0">
+   <ToolBar>
+      <items>
+         <Slider fx:id="sliderVolume" prefHeight="14.0" prefWidth="168.0">
             <padding>
                <Insets right="10.0" />
             </padding>
          </Slider>
          <MediaView fx:id="mediaView" visible="false" />
-          <Button fx:id="pausePlay" onAction="#onPauseButtonPressed" prefHeight="25.0" prefWidth="28.0" />
-      </children>
-   </HBox>
+          <Button fx:id="pausePlay" onAction="#onPauseButtonPressed" prefHeight="25.0" prefWidth="27.0" />
+         <ImageView fitHeight="41.0" fitWidth="159.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@shuffle.png" />
+            </image>
+         </ImageView>
+      </items>
+   </ToolBar>
 </VBox>

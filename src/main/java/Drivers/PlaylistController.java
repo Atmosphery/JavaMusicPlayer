@@ -45,6 +45,7 @@ public class PlaylistController {
     public static void importAllPlaylists(String path) {
         File temp = new File(path);
         File[] tempArr = temp.listFiles();
+
         for(File f: tempArr){
             Playlist newPlaylist = new Playlist(f);
             rootPlaylist.add(newPlaylist);

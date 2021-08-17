@@ -57,7 +57,7 @@ public class Controller implements Initializable {
     @FXML
     private Button nextButton;
 
-    int repeatAmt = 0;
+    int repeatAmt = 1;
     boolean isPaused = false;
     File currentSong;
     int playListIndex = 0;
@@ -73,11 +73,7 @@ public class Controller implements Initializable {
 
         System.out.println("Starting up!");
         pausePlay.setText("||");
-        //PlaylistController.importAllPlaylists("Playlists");
-        //PlaylistController.saveRootPlaylist(savePath);
-        PlaylistController.loadRootPlaylist(saveSerialized);
-
-        loadPlaylistItems();
+        updatePlaylists();
 
         playlistView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -94,10 +90,20 @@ public class Controller implements Initializable {
         });
 
         ArrayList<Playlist> p = PlaylistController.getRootPlaylist();
+
         ArrayList<Song> s = p.get(playListIndex).getSongs();
+        boolean loop = true;
+        while (loop){
+            if (s.size() == 0) {
+                playListIndex++;
+                loop = false;
+                s = p.get(playListIndex).getSongs();
+            }
+        }
+        currentPlaylist = new Playlist(p.get(playListIndex).getPlaylistFile());
         currentSong = s.get(songIndex).getSong();
         metaData = new createMusicPlayer(currentSong);
-        String metaString = "Title: " + metaData.getTitle() + "\n" +
+        String metaString = "Title: " + currentSong.getName() + "\n" +
                 "Artist: " + metaData.getArtist() + "\n" +
                 "Album: " + metaData.getAlbum() + "\n";
         metaDisplay.setText(metaString);
@@ -129,6 +135,13 @@ public class Controller implements Initializable {
             }
         });
         loadMusicSeeker();
+    }
+
+    public void updatePlaylists() {
+        PlaylistController.importAllPlaylists("Playlists");
+        PlaylistController.saveRootPlaylist(saveSerialized);
+        PlaylistController.loadRootPlaylist(saveSerialized);
+        loadPlaylistItems();
     }
 
     @FXML
