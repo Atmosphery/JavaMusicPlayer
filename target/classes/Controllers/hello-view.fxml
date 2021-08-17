@@ -50,7 +50,7 @@
          </SplitPane>
       </children>
    </VBox>
-   <TextArea fx:id="metaDisplay" prefHeight="68.0" prefWidth="346.0" style="-fx-border-color: black;" />
+   <TextArea fx:id="metaDisplay" editable="false" prefHeight="68.0" prefWidth="346.0" style="-fx-border-color: black;" />
    <Slider fx:id="sliderSeeker" />
    <AnchorPane prefHeight="32.0" prefWidth="346.0">
       <children>
