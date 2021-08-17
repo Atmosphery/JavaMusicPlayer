@@ -18,18 +18,36 @@ public class createMusicPlayer {
     public createMusicPlayer(File song){
         media = new Media(song.toURI().toString());
 
-        media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object > change) -> {
-            if(change.wasAdded()){
-                if("artist".equals(change.getKey())){
-                    artist = change.getValueAdded().toString();
-                }else if("title".equals(change.getKey())){
-                    title = change.getValueAdded().toString();
-                }else if("album".equals(change.getKey())){
-                    album = change.getValueAdded().toString();
+//        media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object > change) -> {
+//            if(change.wasAdded()){
+//                if("artist".equals(change.getKey())){
+//                    artist = change.getValueAdded().toString();
+//                }else if("title".equals(change.getKey())){
+//                    title = change.getValueAdded().toString();
+//                }else if("album".equals(change.getKey())){
+//                    album = change.getValueAdded().toString();
+//                }
+//            }
+//        });
+        media.getMetadata().addListener(new MapChangeListener<String, Object>(){
+            @Override
+            public void onChanged(Change<? extends String, ? extends Object> change) {
+                if(change.wasAdded()) {
+                    handleMetadata(change.getKey(), change.getValueAdded());
                 }
             }
         });
+
         player = new MediaPlayer(media);
+    }
+
+    public void handleMetadata(String key, Object value){
+        if (key.equals("title")){
+            title = value.toString();
+        }
+        if (key.equals("artist")){
+            artist = value.toString();
+        }
     }
 
     public File getCurrentSong() {

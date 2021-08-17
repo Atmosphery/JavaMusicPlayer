@@ -20,7 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.stage.FileChooser;
+import javafx.stage.DirectoryChooser;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
-    createMusicPlayer player;
+    createMusicPlayer metaData;
 
     @FXML
     private MediaView mediaView;
@@ -59,7 +59,7 @@ public class Controller implements Initializable {
     File currentSong;
     int playListIndex = 0;
     int songIndex = 0;
-    String savePath = "playlists.txt";
+    String saveSerialized = "playlists.txt";
     Playlist currentPlaylist;
 
 
@@ -67,20 +67,12 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         System.out.println("Starting up!");
-        //Playlist Column
-
-
-
         //PlaylistController.importAllPlaylists("Playlists");
         //PlaylistController.saveRootPlaylist(savePath);
-        PlaylistController.loadRootPlaylist(savePath);
+        PlaylistController.loadRootPlaylist(saveSerialized);
 
-        ArrayList<Playlist> playlists = PlaylistController.getRootPlaylist();
-        ObservableList<String> list = FXCollections.observableArrayList();
-        for (Playlist p : playlists){
-            list.add(p.getPlaylistName());
-        }
-        playlistView.setItems(list);
+        loadPlaylistItems();
+
         playlistView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -99,8 +91,12 @@ public class Controller implements Initializable {
 
         ArrayList<Playlist> p = PlaylistController.getRootPlaylist();
         ArrayList<Song> s = p.get(playListIndex).getSongs();
-        //player = new createMusicPlayer(s.get(songIndex).getSong());
         currentSong = s.get(songIndex).getSong();
+        metaData = new createMusicPlayer(currentSong);
+        String metaString = "Title: " + metaData.getTitle() + "\n" +
+                "Artist: " + metaData.getArtist() + "\n" +
+                "Album: " + metaData.getAlbum() + "\n";
+        metaDisplay.setText(metaString);
 
 
 
@@ -191,24 +187,29 @@ public class Controller implements Initializable {
     protected void onFileButtonPressed() {
         File playlistPath = new File(PlaylistController.getRootPlaylistPath());
         File choiceFile = null;
-        FileChooser fc = new FileChooser();
+        DirectoryChooser dc = new DirectoryChooser();
         boolean loop = true;
         while (loop) {
             if (playlistPath != null) {
                 loop = false;
-                fc.setInitialDirectory(playlistPath);
+                dc.setInitialDirectory(playlistPath);
+            }else {
+                playlistPath.mkdirs();
             }
-            playlistPath.mkdirs();
+
         }
-        fc.setTitle("Create or Select Playlist");
-        boolean loop2 = true;
-        while (loop2){
-            choiceFile = fc.showOpenDialog(null);
-            loop2 = choiceFile == null;
+        dc.setTitle("Create or Select Playlist");
+        try {
+            choiceFile = dc.showDialog(null);
+            if (choiceFile != null){
+                PlaylistController.importPlaylist(choiceFile);
+                PlaylistController.saveRootPlaylist(saveSerialized);
+            }
+            loadPlaylistItems();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("No File was Selected");
         }
-        PlaylistController.importPlaylist(choiceFile);
-        
-        
     }
 
     @FXML
@@ -250,13 +251,9 @@ public class Controller implements Initializable {
 
         mediaPlayer.stop();
         mediaPlayer.dispose();
-
-
         mediaPlayer = new MediaPlayer(media);
-
+        pausePlay.setText(">");
         mediaPlayer.play();
-
-
     }
 
     @FXML
@@ -276,19 +273,26 @@ public class Controller implements Initializable {
                 media = new Media("file://" + currentSong.toURI().getPath());
             }
         }
-
         mediaPlayer.stop();
+
         mediaPlayer.dispose();
 
         //Do NOT remove file:// from the beginning of this - Media expects a url to a resource, not a direct file path. The format here is required for it to
         //function.
 
-
-
         mediaPlayer = new MediaPlayer(media);
-
+        pausePlay.setText(">");
         mediaPlayer.play();
 
+    }
+
+    public void loadPlaylistItems() {
+        ArrayList<Playlist> playlists = PlaylistController.getRootPlaylist();
+        ObservableList<String> list = FXCollections.observableArrayList();
+        for (Playlist p : playlists){
+            list.add(p.getPlaylistName());
+        }
+        playlistView.setItems(list);
     }
 
 
