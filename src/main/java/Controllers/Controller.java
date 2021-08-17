@@ -22,10 +22,9 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Duration;
+
 import java.io.File;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -94,12 +93,14 @@ public class Controller implements Initializable {
         ArrayList<Song> s = p.get(playListIndex).getSongs();
         boolean loop = true;
         while (loop){
-            if (s.size() == 0) {
-                playListIndex++;
+            if (s.size() != 0) {
                 loop = false;
                 s = p.get(playListIndex).getSongs();
+            }else {
+                playListIndex++;
             }
         }
+
         currentPlaylist = new Playlist(p.get(playListIndex).getPlaylistFile());
         currentSong = s.get(songIndex).getSong();
         metaData = new createMusicPlayer(currentSong);
