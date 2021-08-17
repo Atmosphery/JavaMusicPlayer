@@ -49,7 +49,7 @@
       </children>
    </VBox>
    <TextArea fx:id="metaDisplay" prefHeight="68.0" prefWidth="346.0" style="-fx-border-color: black;" />
-   <Slider />
+   <Slider fx:id="sliderSeeker" />
    <AnchorPane prefHeight="32.0" prefWidth="346.0">
       <children>
          <Button fx:id="nextButton" layoutX="230.0" layoutY="7.0" mnemonicParsing="false" onAction="#changeToNextSong" text="Next" />
@@ -61,13 +61,13 @@
     <Label fx:id="welcomeText" />
    <HBox>
       <children>
-         <Slider fx:id="sliderVolume">
+         <Slider fx:id="sliderVolume" prefHeight="14.0" prefWidth="161.0">
             <padding>
                <Insets right="10.0" />
             </padding>
          </Slider>
-          <Button fx:id="pausePlay" onAction="#onPauseButtonPressed" text="Play!" />
          <MediaView fx:id="mediaView" visible="false" />
+          <Button fx:id="pausePlay" onAction="#onPauseButtonPressed" prefHeight="25.0" prefWidth="28.0" />
       </children>
    </HBox>
 </VBox>

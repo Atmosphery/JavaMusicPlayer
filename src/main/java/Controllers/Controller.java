@@ -22,9 +22,10 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Duration;
-
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -50,6 +51,8 @@ public class Controller implements Initializable {
     @FXML
     private TextArea metaDisplay;
     @FXML
+    private Slider sliderSeeker;
+    @FXML
     private Button prevButton;
     @FXML
     private Button nextButton;
@@ -59,6 +62,8 @@ public class Controller implements Initializable {
     File currentSong;
     int playListIndex = 0;
     int songIndex = 0;
+    boolean changing = false;
+    int changedSlider = 0;
     String saveSerialized = "playlists.txt";
     Playlist currentPlaylist;
 
@@ -67,6 +72,7 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         System.out.println("Starting up!");
+        pausePlay.setText("||");
         //PlaylistController.importAllPlaylists("Playlists");
         //PlaylistController.saveRootPlaylist(savePath);
         PlaylistController.loadRootPlaylist(saveSerialized);
@@ -87,8 +93,6 @@ public class Controller implements Initializable {
             }
         });
 
-
-
         ArrayList<Playlist> p = PlaylistController.getRootPlaylist();
         ArrayList<Song> s = p.get(playListIndex).getSongs();
         currentSong = s.get(songIndex).getSong();
@@ -97,9 +101,6 @@ public class Controller implements Initializable {
                 "Artist: " + metaData.getArtist() + "\n" +
                 "Album: " + metaData.getAlbum() + "\n";
         metaDisplay.setText(metaString);
-
-
-
 
         media = new Media(currentSong.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
@@ -127,6 +128,7 @@ public class Controller implements Initializable {
                 mediaPlayer.setVolume(sliderVolume.getValue() / 100);
             }
         });
+        loadMusicSeeker();
     }
 
     @FXML
@@ -163,12 +165,11 @@ public class Controller implements Initializable {
                     media = new Media(currentSong.toURI().toString());
                     mediaPlayer = new MediaPlayer(media);
                     mediaView.setMediaPlayer(mediaPlayer);
+                    loadMusicSeeker();
                 }
             }
         }
     }
-
-
 
     @FXML
     protected void onPauseButtonPressed() {
@@ -252,6 +253,7 @@ public class Controller implements Initializable {
         mediaPlayer.stop();
         mediaPlayer.dispose();
         mediaPlayer = new MediaPlayer(media);
+        loadMusicSeeker();
         pausePlay.setText(">");
         mediaPlayer.play();
     }
@@ -281,6 +283,7 @@ public class Controller implements Initializable {
         //function.
 
         mediaPlayer = new MediaPlayer(media);
+        loadMusicSeeker();
         pausePlay.setText(">");
         mediaPlayer.play();
 
@@ -295,5 +298,45 @@ public class Controller implements Initializable {
         playlistView.setItems(list);
     }
 
+    public void loadMusicSeeker() {
+        mediaPlayer.setOnReady(() -> {
+            sliderSeeker.setMax(0.0);
+            sliderSeeker.setMax(mediaPlayer.getTotalDuration().toSeconds());
+            // know when the slider value is actually changing
+            // and only seek when it has stopped changing
+            sliderSeeker.valueChangingProperty().addListener(
+                    (observableValue, aBoolean, t1) -> {
+                        changing = t1;
+                        if (!changing) {
+                            mediaPlayer.seek(Duration.seconds(changedSlider));
+                        }
+                    });
+            // Save the slider value when changing, but don't seek yet
+            // When slider not changing check the difference between
+            // prev and current values.
+            // For player initiated changes the delta will be small,
+            // but for mouse clicks on the slider the delta will be much
+            // larger, and in this case do a seek.
+            sliderSeeker.valueProperty().addListener(
+                    (observableValue, number, t1) -> {
+                        if (changing) {
+                            changedSlider = t1.intValue();
+                        } else {
+                            int change = Math.abs(t1.intValue() - number.intValue());
+                            if (change > 1) {
+                                mediaPlayer.seek(Duration.seconds(t1.intValue()));
+                            }
+                        }
+                    });
+            // set slider on player media progress,
+            // but only when slider is not changing
+            mediaPlayer.currentTimeProperty().addListener(
+                    (observableValue, duration, t1) -> {
+                        if (!changing) {
+                            sliderSeeker.setValue(t1.toSeconds());
+                        }
+                    });
+        });
+    }
 
 }

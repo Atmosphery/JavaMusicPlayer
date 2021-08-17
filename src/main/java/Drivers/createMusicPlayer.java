@@ -14,9 +14,12 @@ public class createMusicPlayer {
     private String album;
     private Media media;
     private MediaPlayer player;
+    private Object obj = new Object();
 
     public createMusicPlayer(File song){
         media = new Media(song.toURI().toString());
+        player = new MediaPlayer(media);
+        readMetaData(player);
 
 //        media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object > change) -> {
 //            if(change.wasAdded()){
@@ -29,25 +32,23 @@ public class createMusicPlayer {
 //                }
 //            }
 //        });
-        media.getMetadata().addListener(new MapChangeListener<String, Object>(){
+
+
+    }
+
+    private void readMetaData(MediaPlayer player) {
+        final MediaPlayer mp = player;
+        mp.setOnReady(new Runnable() {
             @Override
-            public void onChanged(Change<? extends String, ? extends Object> change) {
-                if(change.wasAdded()) {
-                    handleMetadata(change.getKey(), change.getValueAdded());
+            public void run() {
+                artist = (String) mp.getMedia().getMetadata().get("artist");
+                title = (String) mp.getMedia().getMetadata().get("title");
+                album = (String) mp.getMedia().getMetadata().get("album");
+                synchronized (obj) {//this is required since mp.setOnReady creates a new thread and our loopp  in the main thread
+                    obj.notify();// the loop has to wait unitl we are able to get the media metadata thats why use .wait() and .notify() to synce the two threads(main thread and MediaPlayer thread)
                 }
             }
         });
-
-        player = new MediaPlayer(media);
-    }
-
-    public void handleMetadata(String key, Object value){
-        if (key.equals("title")){
-            title = value.toString();
-        }
-        if (key.equals("artist")){
-            artist = value.toString();
-        }
     }
 
     public File getCurrentSong() {
