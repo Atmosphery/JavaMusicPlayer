@@ -90,12 +90,14 @@ public class Controller implements Initializable {
 
         ArrayList<Playlist> p = PlaylistController.getRootPlaylist();
 
-        ArrayList<Song> s = p.get(playListIndex).getSongs();
+        ArrayList<Song> s = null;
         boolean loop = true;
         while (loop){
-            if (s.size() != 0) {
+            ArrayList<Song> temp = p.get(playListIndex).getSongs();;
+            if (temp.size() != 0) {
                 loop = false;
-                s = p.get(playListIndex).getSongs();
+                temp = p.get(playListIndex).getSongs();
+                s = temp;
             }else {
                 playListIndex++;
             }
