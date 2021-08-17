@@ -5,6 +5,9 @@ import java.util.ArrayList;
 
 public class PlaylistController {
     private static ArrayList<Playlist> rootPlaylist = new ArrayList<>();
+    private final static String rootPlaylistPath = "Playlists\\";
+
+
 
     //Creates a playlist and adds it to rootPlaylist Array
     public static void createNewPlaylist(String playlistName) {
@@ -15,6 +18,11 @@ public class PlaylistController {
     public static void importPlaylist(String playlistPath) {
         File newPlaylistFile = new File(playlistPath);
         Playlist newPlaylist = new Playlist(newPlaylistFile);
+        rootPlaylist.add(newPlaylist);
+    }
+
+    public static void importPlaylist(File playlist) {
+        Playlist newPlaylist = new Playlist(playlist);
         rootPlaylist.add(newPlaylist);
     }
 
@@ -64,5 +72,9 @@ public class PlaylistController {
                 break;
             }
         }
+    }
+
+    public static String getRootPlaylistPath() {
+        return rootPlaylistPath;
     }
 }

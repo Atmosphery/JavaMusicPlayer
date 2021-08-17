@@ -182,10 +182,26 @@ public class Controller implements Initializable {
 
     @FXML
     protected void onFileButtonPressed() {
+        File playlistPath = new File(PlaylistController.getRootPlaylistPath());
+        File choiceFile = null;
         FileChooser fc = new FileChooser();
-        fc.setTitle("File Choosing");
-        File f = fc.showOpenDialog(null);
-        System.out.println(f.getPath());
+        boolean loop = true;
+        while (loop) {
+            if (playlistPath != null) {
+                loop = false;
+                fc.setInitialDirectory(playlistPath);
+            }
+            playlistPath.mkdirs();
+        }
+        fc.setTitle("Create or Select Playlist");
+        boolean loop2 = true;
+        while (loop2){
+            choiceFile = fc.showOpenDialog(null);
+            loop2 = choiceFile == null;
+        }
+        PlaylistController.importPlaylist(choiceFile);
+        
+        
     }
 
     @FXML
