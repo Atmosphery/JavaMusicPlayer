@@ -49,6 +49,10 @@ public class Controller implements Initializable {
     private ListView<String> songView;
     @FXML
     private TextArea metaDisplay;
+    @FXML
+    private Button prevButton;
+    @FXML
+    private Button nextButton;
 
     int repeatAmt = 0;
     boolean isPaused = false;
@@ -98,6 +102,9 @@ public class Controller implements Initializable {
         //player = new createMusicPlayer(s.get(songIndex).getSong());
         currentSong = s.get(songIndex).getSong();
 
+
+
+
         media = new Media(currentSong.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
         mediaView.setMediaPlayer(mediaPlayer);
@@ -109,6 +116,7 @@ public class Controller implements Initializable {
                     break;
                 case 2:
                     //Repeat Arraylist
+                    //Maybe consider this being separate from the end of the song.
                     System.out.println("Playlist Check");
                     break;
                 default:
@@ -177,7 +185,6 @@ public class Controller implements Initializable {
             mediaPlayer.play();
             pausePlay.setText(">");
         }
-
     }
 
     @FXML
@@ -221,6 +228,67 @@ public class Controller implements Initializable {
                 repeat.setText("R3");
                 repeatAmt = 0;
         }
+    }
+
+
+    @FXML
+    void changeToNextSong(ActionEvent event) {
+        if(!((playListIndex + 1) > (currentPlaylist.getSongs().size() - 1))){
+            playListIndex ++;
+            currentSong = currentPlaylist.getSongs().get(playListIndex).getSong();
+            if(currentSong.getPath().contains(" ")){
+                String formattedPath = currentSong.toURI().getPath();
+                formattedPath = formattedPath.replaceAll(" ", "%20");
+
+                //Do NOT remove file:// from the beginning of this - Media expects a url to a resource, not a direct file path. The format here is required for it to
+                //function.
+                media = new Media("file://" + formattedPath);
+            }else{
+                media = new Media("file://" + currentSong.toURI().getPath());
+            }
+        }
+
+        mediaPlayer.stop();
+        mediaPlayer.dispose();
+
+
+        mediaPlayer = new MediaPlayer(media);
+
+        mediaPlayer.play();
+
+
+    }
+
+    @FXML
+    void changeToPrevSong(ActionEvent event) {
+
+        if(!((playListIndex - 1) < 0)){
+            playListIndex--;
+            currentSong = currentPlaylist.getSongs().get(playListIndex).getSong();
+            if(currentSong.getPath().contains(" ")){
+                String formattedPath = currentSong.toURI().getPath();
+                formattedPath = formattedPath.replaceAll(" ", "%20");
+
+                //Do NOT remove file:// from the beginning of this - Media expects a url to a resource, not a direct file path. The format here is required for it to
+                //function.
+                media = new Media("file://" + formattedPath);
+            }else{
+                media = new Media("file://" + currentSong.toURI().getPath());
+            }
+        }
+
+        mediaPlayer.stop();
+        mediaPlayer.dispose();
+
+        //Do NOT remove file:// from the beginning of this - Media expects a url to a resource, not a direct file path. The format here is required for it to
+        //function.
+
+
+
+        mediaPlayer = new MediaPlayer(media);
+
+        mediaPlayer.play();
+
     }
 
 
