@@ -21,7 +21,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Duration;
 
@@ -57,12 +56,6 @@ public class Controller implements Initializable {
     private Button prevButton;
     @FXML
     private Button nextButton;
-    @FXML
-    private Text songTitle;
-    @FXML
-    private Text artistName;
-    @FXML
-    private Text albumName;
     @FXML
     private ImageView albumArt;
 
@@ -138,9 +131,9 @@ public class Controller implements Initializable {
             }
         });
 
-        songTitle.setText(musicPlayer.getTitle());
-        artistName.setText(musicPlayer.getArtist());
-        albumName.setText(musicPlayer.getAlbum());
+        metaDisplay.setText("Title: " + musicPlayer.getTitle() +
+                "Album: " + musicPlayer.getAlbum() +
+                "Artist: " + musicPlayer.getArtist());
         albumArt.setImage(musicPlayer.getAlbumArt());
 
         sliderVolume.setValue(mediaPlayer.getVolume() * 100);
@@ -200,9 +193,9 @@ public class Controller implements Initializable {
                     mediaView.setMediaPlayer(mediaPlayer);
                     loadMusicSeeker();
 
-                    songTitle.setText(musicPlayer.getTitle());
-                    artistName.setText(musicPlayer.getArtist());
-                    albumName.setText(musicPlayer.getAlbum());
+                    metaDisplay.setText("Title: " + musicPlayer.getTitle() +
+                            "Album: " + musicPlayer.getAlbum() +
+                            "Artist: " + musicPlayer.getArtist());
                     albumArt.setImage(musicPlayer.getAlbumArt());
 
                 }
@@ -312,9 +305,9 @@ public class Controller implements Initializable {
         pausePlay.setText(">");
         mediaPlayer.play();
 
-        songTitle.setText(musicPlayer.getTitle());
-        artistName.setText(musicPlayer.getArtist());
-        albumName.setText(musicPlayer.getAlbum());
+        metaDisplay.setText("Title: " + musicPlayer.getTitle() +
+                "Album: " + musicPlayer.getAlbum() +
+                "Artist: " + musicPlayer.getArtist());
         albumArt.setImage(musicPlayer.getAlbumArt());
 
     }
@@ -363,9 +356,9 @@ public class Controller implements Initializable {
         pausePlay.setText(">");
         mediaPlayer.play();
 
-        songTitle.setText(musicPlayer.getTitle());
-        artistName.setText(musicPlayer.getArtist());
-        albumName.setText(musicPlayer.getAlbum());
+        metaDisplay.setText("Title: " + musicPlayer.getTitle() +
+                "Album: " + musicPlayer.getAlbum() +
+                "Artist: " + musicPlayer.getArtist());
         albumArt.setImage(musicPlayer.getAlbumArt());
 
 
