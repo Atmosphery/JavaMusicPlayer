@@ -127,6 +127,7 @@ public class Controller implements Initializable {
                     break;
                 default:
                     //No repeat
+                    break;
 
             }
         });
@@ -268,9 +269,9 @@ public class Controller implements Initializable {
 
     @FXML
     void changeToNextSong(ActionEvent event) {
-        if(!((playListIndex + 1) > (currentPlaylist.getSongs().size() - 1))){
-            playListIndex ++;
-            currentSong = currentPlaylist.getSongs().get(playListIndex).getSong();
+        if(!((songIndex + 1) > (currentPlaylist.getSongs().size() - 1))){
+            songIndex ++;
+            currentSong = currentPlaylist.getSongs().get(songIndex).getSong();
             if(currentSong.getPath().contains(" ")){
                 String formattedPath = currentSong.toURI().getPath();
                 formattedPath = formattedPath.replaceAll(" ", "%20");
@@ -282,8 +283,8 @@ public class Controller implements Initializable {
                 media = new Media("file://" + currentSong.toURI().getPath());
             }
         }else{
-            playListIndex = 0;
-            currentSong = currentPlaylist.getSongs().get(playListIndex).getSong();
+            songIndex = 0;
+            currentSong = currentPlaylist.getSongs().get(songIndex).getSong();
             if(currentSong.getPath().contains(" ")){
                 String formattedPath = currentSong.toURI().getPath();
                 formattedPath = formattedPath.replaceAll(" ", "%20");
@@ -316,9 +317,9 @@ public class Controller implements Initializable {
     @FXML
     void changeToPrevSong(ActionEvent event) {
 
-        if(!((playListIndex - 1) < 0)){
-            playListIndex--;
-            currentSong = currentPlaylist.getSongs().get(playListIndex).getSong();
+        if(!((songIndex - 1) < 0)){
+            songIndex--;
+            currentSong = currentPlaylist.getSongs().get(songIndex).getSong();
             if(currentSong.getPath().contains(" ")){
                 String formattedPath = currentSong.toURI().getPath();
                 formattedPath = formattedPath.replaceAll(" ", "%20");
@@ -330,8 +331,8 @@ public class Controller implements Initializable {
                 media = new Media("file://" + currentSong.toURI().getPath());
             }
         }else{
-            playListIndex = currentPlaylist.getSongs().size() - 1;
-            currentSong = currentPlaylist.getSongs().get(playListIndex).getSong();
+            songIndex = currentPlaylist.getSongs().size() - 1;
+            currentSong = currentPlaylist.getSongs().get(songIndex).getSong();
             if(currentSong.getPath().contains(" ")){
                 String formattedPath = currentSong.toURI().getPath();
                 formattedPath = formattedPath.replaceAll(" ", "%20");
