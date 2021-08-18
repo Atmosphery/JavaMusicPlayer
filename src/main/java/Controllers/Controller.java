@@ -16,10 +16,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Duration;
 
@@ -29,7 +31,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
-    createMusicPlayer metaData;
+    createMusicPlayer musicPlayer;
 
     @FXML
     private MediaView mediaView;
@@ -55,6 +57,16 @@ public class Controller implements Initializable {
     private Button prevButton;
     @FXML
     private Button nextButton;
+    @FXML
+    private Text songTitle;
+    @FXML
+    private Text artistName;
+    @FXML
+    private Text albumName;
+    @FXML
+    private ImageView albumArt;
+
+
 
     int repeatAmt = 1;
     boolean isPaused = false;
@@ -90,14 +102,12 @@ public class Controller implements Initializable {
 
         ArrayList<Playlist> p = PlaylistController.getRootPlaylist();
 
-        ArrayList<Song> s = null;
+        ArrayList<Song> s = p.get(playListIndex).getSongs();
         boolean loop = true;
         while (loop){
-            ArrayList<Song> temp = p.get(playListIndex).getSongs();;
-            if (temp.size() != 0) {
+            if (s.size() != 0) {
                 loop = false;
-                temp = p.get(playListIndex).getSongs();
-                s = temp;
+                s = p.get(playListIndex).getSongs();
             }else {
                 playListIndex++;
             }
@@ -105,15 +115,12 @@ public class Controller implements Initializable {
 
         currentPlaylist = new Playlist(p.get(playListIndex).getPlaylistFile());
         currentSong = s.get(songIndex).getSong();
-        metaData = new createMusicPlayer(currentSong);
-        String metaString = "Title: " + currentSong.getName() + "\n" +
-                "Artist: " + metaData.getArtist() + "\n" +
-                "Album: " + metaData.getAlbum() + "\n";
-        metaDisplay.setText(metaString);
 
-        media = new Media(currentSong.toURI().toString());
-        mediaPlayer = new MediaPlayer(media);
-        mediaView.setMediaPlayer(mediaPlayer);
+        musicPlayer = new createMusicPlayer(currentSong);
+
+        mediaPlayer = musicPlayer.getPlayer();
+
+        mediaView.setMediaPlayer(musicPlayer.getPlayer());
         mediaPlayer.setOnEndOfMedia(() -> {
             switch (repeatAmt) {
                 case 1:
@@ -130,6 +137,12 @@ public class Controller implements Initializable {
 
             }
         });
+
+        songTitle.setText(musicPlayer.getTitle());
+        artistName.setText(musicPlayer.getArtist());
+        albumName.setText(musicPlayer.getAlbum());
+        albumArt.setImage(musicPlayer.getAlbumArt());
+
         sliderVolume.setValue(mediaPlayer.getVolume() * 100);
         sliderVolume.valueProperty().addListener(new InvalidationListener() {
             @Override
@@ -157,6 +170,7 @@ public class Controller implements Initializable {
 
             for (Playlist p: playlist){
                 if (p.getPlaylistName().equals(name)){
+                    playListIndex = 0;
                     currentPlaylist = p;
                     songs = p.getSongs();
                     for (Song s: songs){
@@ -179,9 +193,18 @@ public class Controller implements Initializable {
                 if(s.getTitle().equals(name)) {
                     currentSong = s.getSong();
                     media = new Media(currentSong.toURI().toString());
-                    mediaPlayer = new MediaPlayer(media);
+
+                    musicPlayer.changeMedia(media);
+
+                    mediaPlayer = musicPlayer.getPlayer();
                     mediaView.setMediaPlayer(mediaPlayer);
                     loadMusicSeeker();
+
+                    songTitle.setText(musicPlayer.getTitle());
+                    artistName.setText(musicPlayer.getArtist());
+                    albumName.setText(musicPlayer.getAlbum());
+                    albumArt.setImage(musicPlayer.getAlbumArt());
+
                 }
             }
         }
@@ -264,14 +287,36 @@ public class Controller implements Initializable {
             }else{
                 media = new Media("file://" + currentSong.toURI().getPath());
             }
+        }else{
+            playListIndex = 0;
+            currentSong = currentPlaylist.getSongs().get(playListIndex).getSong();
+            if(currentSong.getPath().contains(" ")){
+                String formattedPath = currentSong.toURI().getPath();
+                formattedPath = formattedPath.replaceAll(" ", "%20");
+
+                //Do NOT remove file:// from the beginning of this - Media expects a url to a resource, not a direct file path. The format here is required for it to
+                //function.
+                media = new Media("file://" + formattedPath);
+            }else{
+                media = new Media("file://" + currentSong.toURI().getPath());
+            }
         }
 
         mediaPlayer.stop();
         mediaPlayer.dispose();
-        mediaPlayer = new MediaPlayer(media);
+
+        musicPlayer.changeMedia(media);
+
+        mediaPlayer = musicPlayer.getPlayer();
         loadMusicSeeker();
         pausePlay.setText(">");
         mediaPlayer.play();
+
+        songTitle.setText(musicPlayer.getTitle());
+        artistName.setText(musicPlayer.getArtist());
+        albumName.setText(musicPlayer.getAlbum());
+        albumArt.setImage(musicPlayer.getAlbumArt());
+
     }
 
     @FXML
@@ -279,6 +324,19 @@ public class Controller implements Initializable {
 
         if(!((playListIndex - 1) < 0)){
             playListIndex--;
+            currentSong = currentPlaylist.getSongs().get(playListIndex).getSong();
+            if(currentSong.getPath().contains(" ")){
+                String formattedPath = currentSong.toURI().getPath();
+                formattedPath = formattedPath.replaceAll(" ", "%20");
+
+                //Do NOT remove file:// from the beginning of this - Media expects a url to a resource, not a direct file path. The format here is required for it to
+                //function.
+                media = new Media("file://" + formattedPath);
+            }else{
+                media = new Media("file://" + currentSong.toURI().getPath());
+            }
+        }else{
+            playListIndex = currentPlaylist.getSongs().size() - 1;
             currentSong = currentPlaylist.getSongs().get(playListIndex).getSong();
             if(currentSong.getPath().contains(" ")){
                 String formattedPath = currentSong.toURI().getPath();
@@ -298,10 +356,18 @@ public class Controller implements Initializable {
         //Do NOT remove file:// from the beginning of this - Media expects a url to a resource, not a direct file path. The format here is required for it to
         //function.
 
-        mediaPlayer = new MediaPlayer(media);
+        musicPlayer.changeMedia(media);
+        mediaPlayer = musicPlayer.getPlayer();
+
         loadMusicSeeker();
         pausePlay.setText(">");
         mediaPlayer.play();
+
+        songTitle.setText(musicPlayer.getTitle());
+        artistName.setText(musicPlayer.getArtist());
+        albumName.setText(musicPlayer.getAlbum());
+        albumArt.setImage(musicPlayer.getAlbumArt());
+
 
     }
 

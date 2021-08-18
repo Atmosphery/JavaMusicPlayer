@@ -1,6 +1,7 @@
 package Drivers;
 
 import javafx.collections.MapChangeListener;
+import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -14,41 +15,40 @@ public class createMusicPlayer {
     private String album;
     private Media media;
     private MediaPlayer player;
-    private Object obj = new Object();
+    private Image albumArt;
+
 
     public createMusicPlayer(File song){
+
+        if(song.getPath().contains(" ")){
+            String formattedPath = song.toURI().getPath();
+            formattedPath = formattedPath.replaceAll(" ", "%20");
+
+            //Do NOT remove file:// from the beginning of this - Media expects a url to a resource, not a direct file path. The format here is required for it to
+            //function.
+            currentSong = new File(formattedPath);
+            media = new Media("file://" + formattedPath);
+        }else{
+            currentSong = song;
+            media = new Media("file://" + song.toURI().getPath());
+        }
+
         media = new Media(song.toURI().toString());
-        player = new MediaPlayer(media);
-        readMetaData(player);
 
-//        media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object > change) -> {
-//            if(change.wasAdded()){
-//                if("artist".equals(change.getKey())){
-//                    artist = change.getValueAdded().toString();
-//                }else if("title".equals(change.getKey())){
-//                    title = change.getValueAdded().toString();
-//                }else if("album".equals(change.getKey())){
-//                    album = change.getValueAdded().toString();
-//                }
-//            }
-//        });
-
-
-    }
-
-    private void readMetaData(MediaPlayer player) {
-        final MediaPlayer mp = player;
-        mp.setOnReady(new Runnable() {
-            @Override
-            public void run() {
-                artist = (String) mp.getMedia().getMetadata().get("artist");
-                title = (String) mp.getMedia().getMetadata().get("title");
-                album = (String) mp.getMedia().getMetadata().get("album");
-                synchronized (obj) {//this is required since mp.setOnReady creates a new thread and our loopp  in the main thread
-                    obj.notify();// the loop has to wait unitl we are able to get the media metadata thats why use .wait() and .notify() to synce the two threads(main thread and MediaPlayer thread)
+        media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object > change) -> {
+            if(change.wasAdded()){
+                if("artist".equals(change.getKey())){
+                    artist = change.getValueAdded().toString();
+                }else if("title".equals(change.getKey())){
+                    title = change.getValueAdded().toString();
+                }else if("album".equals(change.getKey())){
+                    album = change.getValueAdded().toString();
+                }else if("image".equals(change.getKey())){
+                    albumArt = (Image) change.getValueAdded();
                 }
             }
         });
+        player = new MediaPlayer(media);
     }
 
     public File getCurrentSong() {
@@ -116,11 +116,44 @@ public class createMusicPlayer {
         this.media = media;
     }
 
+    public void changeMedia(Media media){
+        player.stop();
+        player.dispose();
+
+        this.media = media;
+
+        this.media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object > change) -> {
+            if(change.wasAdded()){
+                if("artist".equals(change.getKey())){
+                    artist = change.getValueAdded().toString();
+                }else if("title".equals(change.getKey())){
+                    title = change.getValueAdded().toString();
+                }else if("album".equals(change.getKey())){
+                    album = change.getValueAdded().toString();
+                }else if("image".equals(change.getKey())){
+                    albumArt = (Image) change.getValueAdded();
+                }
+            }
+        });
+
+        player = new MediaPlayer(this.media);
+    }
+
+
+
     public MediaPlayer getPlayer() {
         return player;
     }
 
     public void setPlayer(MediaPlayer player) {
         this.player = player;
+    }
+
+    public Image getAlbumArt() {
+        return albumArt;
+    }
+
+    public void setAlbumArt(Image albumArt) {
+        this.albumArt = albumArt;
     }
 }
