@@ -53,7 +53,7 @@
    </VBox>
    <Pane prefHeight="91.0" prefWidth="346.0">
       <children>
-         <ImageView fx:id="albumArt" fitHeight="60.0" fitWidth="77.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
+         <ImageView fx:id="albumArt" fitHeight="75.0" fitWidth="80.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true" />
          <TextArea fx:id="metaDisplay" layoutX="82.0" prefHeight="69.0" prefWidth="264.0" style="-fx-background-color: ADD8E6;" />
       </children>
    </Pane>

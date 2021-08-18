@@ -108,7 +108,7 @@ public class Controller implements Initializable {
 
         currentPlaylist = new Playlist(p.get(playListIndex).getPlaylistFile());
         currentSong = s.get(songIndex).getSong();
-
+        Media m = new Media (currentSong.toURI().toString());
         musicPlayer = new createMusicPlayer(currentSong);
 
         mediaPlayer = musicPlayer.getPlayer();
@@ -131,9 +131,9 @@ public class Controller implements Initializable {
             }
         });
 
-        metaDisplay.setText("Title: " + musicPlayer.getTitle() +
-                "Album: " + musicPlayer.getAlbum() +
-                "Artist: " + musicPlayer.getArtist());
+        metaDisplay.setText("Title: " + musicPlayer.getTitle() + "\n" +
+                "Album: " + musicPlayer.getAlbum() + "\n" +
+                "Artist: " + musicPlayer.getArtist() + "\n");
         albumArt.setImage(musicPlayer.getAlbumArt());
 
         sliderVolume.setValue(mediaPlayer.getVolume() * 100);
@@ -193,14 +193,15 @@ public class Controller implements Initializable {
                     mediaView.setMediaPlayer(mediaPlayer);
                     loadMusicSeeker();
 
-                    metaDisplay.setText("Title: " + musicPlayer.getTitle() +
-                            "Album: " + musicPlayer.getAlbum() +
-                            "Artist: " + musicPlayer.getArtist());
+                    metaDisplay.setText("Title: " + musicPlayer.getTitle() + "\n" +
+                            "Album: " + musicPlayer.getAlbum() + "\n" +
+                            "Artist: " + musicPlayer.getArtist() + "\n");
                     albumArt.setImage(musicPlayer.getAlbumArt());
 
                 }
             }
         }
+
     }
 
     @FXML

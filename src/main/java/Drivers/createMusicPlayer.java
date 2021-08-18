@@ -51,6 +51,7 @@ public class createMusicPlayer {
         player = new MediaPlayer(media);
     }
 
+
     public File getCurrentSong() {
         return currentSong;
     }
@@ -119,7 +120,6 @@ public class createMusicPlayer {
     public void changeMedia(Media media){
         player.stop();
         player.dispose();
-
         this.media = media;
 
         this.media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object > change) -> {
@@ -134,6 +134,7 @@ public class createMusicPlayer {
                     albumArt = (Image) change.getValueAdded();
                 }
             }
+
         });
 
         player = new MediaPlayer(this.media);
