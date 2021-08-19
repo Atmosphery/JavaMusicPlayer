@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -13,22 +14,22 @@
 
 <AnchorPane prefHeight="800.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Controller">
    <children>
-      <AnchorPane minHeight="80.0" minWidth="500.0" prefHeight="80.0" prefWidth="500.0" style="-fx-background-color: red;">
+      <AnchorPane minHeight="80.0" minWidth="500.0" prefHeight="80.0" prefWidth="500.0" style="-fx-background-color: e5e5e5;">
          <children>
-            <Label text="Media Tonic" AnchorPane.leftAnchor="163.0" AnchorPane.topAnchor="20.0">
+            <Label text="Mega Media" textFill="#14213d" AnchorPane.leftAnchor="163.0" AnchorPane.topAnchor="20.0">
                <font>
-                  <Font name="Bauhaus 93" size="32.0" />
+                  <Font name="SansSerif Bold" size="32.0" />
                </font>
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="6.0" layoutY="72.0" minHeight="720.0" minWidth="500.0" prefHeight="720.0" prefWidth="500.0" style="-fx-background-color: blue;" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="80.0">
+      <AnchorPane layoutX="6.0" layoutY="72.0" minHeight="720.0" minWidth="500.0" prefHeight="720.0" prefWidth="500.0" style="-fx-background-color: linear-gradient(ffffff,e5e5e5);" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="80.0">
          <children>
-            <AnchorPane layoutY="76.0" prefHeight="200.0" prefWidth="440.0" AnchorPane.topAnchor="40.0">
+            <AnchorPane layoutY="76.0" prefHeight="188.0" prefWidth="480.0" AnchorPane.topAnchor="60.0">
                <children>
                   <SplitPane dividerPositions="0.5" prefHeight="200.0" prefWidth="460.0" AnchorPane.leftAnchor="20.0">
                     <items>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="220.0">
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="172.0" prefWidth="226.0">
                            <children>
                               <ListView fx:id="playlistView" onMouseClicked="#onClickTableItem" prefHeight="200.0" prefWidth="230.0" />
                            </children>
@@ -42,32 +43,83 @@
                   </SplitPane>
                </children>
             </AnchorPane>
+            <AnchorPane prefHeight="70.0" prefWidth="500.0" AnchorPane.topAnchor="630.0">
+               <children>
+                  <Button fx:id="createPlaylist" layoutX="150.0" layoutY="14.0" mnemonicParsing="false" onAction="#onFileButtonPressed" prefHeight="50.0" prefWidth="200.0" text="Open File Directory" textFill="#003049" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="14.0">
+                     <font>
+                        <Font name="SansSerif Regular" size="20.0" />
+                     </font></Button>
+               </children>
+            </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="440.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="400.0">
                <children>
-                  <TextArea fx:id="metaDisplay" layoutY="-11.0" prefHeight="61.0" prefWidth="440.0" AnchorPane.topAnchor="-11.0" />
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="20.0">
+                  <TextArea fx:id="metaDisplay" editable="false" layoutY="-12.0" prefHeight="60.0" prefWidth="440.0" AnchorPane.topAnchor="5.0" />
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-radius: 0px;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="20.0">
                      <children>
-                        <Slider fx:id="sliderSeeker" prefHeight="1.0" prefWidth="400.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="50.0" />
-                        <Button fx:id="nextButton" layoutX="282.0" layoutY="115.0" mnemonicParsing="false" onAction="#changeToNextSong" prefHeight="50.0" prefWidth="50.0" text="Next" AnchorPane.leftAnchor="272.0" AnchorPane.topAnchor="102.0" />
-                        <MediaView fx:id="mediaView" visible="false" />
-                        <Button fx:id="pausePlay" onAction="#onPauseButtonPressed" prefHeight="74.0" prefWidth="74.0" AnchorPane.leftAnchor="181.0" AnchorPane.topAnchor="90.0">
+                        <Slider fx:id="sliderSeeker" layoutX="1.0" layoutY="58.0" prefHeight="14.0" prefWidth="356.0" AnchorPane.leftAnchor="1.0" AnchorPane.topAnchor="58.0" />
+                        <Button fx:id="nextButton" layoutX="282.0" layoutY="115.0" mnemonicParsing="false" onAction="#changeToNextSong" prefHeight="50.0" prefWidth="50.0" style="-fx-background-radius: 100px;" AnchorPane.leftAnchor="282.0" AnchorPane.topAnchor="102.0">
                            <graphic>
-                              <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                              <FontAwesomeIconView fill="#14213d" glyphName="FORWARD" size="25" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="40.0" />
+                                 </font>
+                              </FontAwesomeIconView>
+                           </graphic></Button>
+                        <MediaView fx:id="mediaView" visible="false" />
+                        <Button fx:id="pausePlay" onAction="#onPauseButtonPressed" prefHeight="74.0" prefWidth="74.0" style="-fx-border-radius: 100px; -fx-background-radius: 100px;" AnchorPane.leftAnchor="181.0" AnchorPane.topAnchor="90.0">
+                           <graphic>
+                              <FontAwesomeIconView fx:id="playPauseImage" fill="#14213d" glyphName="PAUSE" size="45" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="40.0" />
+                                 </font>
+                              </FontAwesomeIconView>
                            </graphic>
                         </Button>
-                        <Button fx:id="prevButton" layoutX="105.0" layoutY="92.0" mnemonicParsing="false" onAction="#changeToPrevSong" prefHeight="50.0" prefWidth="50.0" text="Prev." AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="102.0" />
-                        <Button fx:id="repeat" layoutX="356.0" layoutY="107.0" mnemonicParsing="false" onAction="#onRepeatButtonPressed" prefHeight="50.0" prefWidth="50.0" text="R1" AnchorPane.leftAnchor="356.0" AnchorPane.topAnchor="102.0" />
+                        <Button fx:id="prevButton" layoutX="105.0" layoutY="92.0" mnemonicParsing="false" onAction="#changeToPrevSong" prefHeight="50.0" prefWidth="50.0" style="-fx-background-radius: 100px;" AnchorPane.leftAnchor="105.0" AnchorPane.topAnchor="102.0">
+                           <graphic>
+                              <FontAwesomeIconView fill="#14213d" glyphName="BACKWARD" size="25" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="40.0" />
+                                 </font>
+                              </FontAwesomeIconView>
+                           </graphic></Button>
+                        <Button fx:id="repeat" layoutX="361.0" layoutY="171.0" mnemonicParsing="false" onAction="#onRepeatButtonPressed" prefHeight="40.0" prefWidth="76.0" style="-fx-background-radius: 15px;" AnchorPane.leftAnchor="361.0" AnchorPane.topAnchor="171.0">
+                           <graphic>
+                              <FontAwesomeIconView fx:id="repeatImage" fill="#14213d" glyphName="TIMES" size="25" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="40.0" />
+                                 </font>
+                              </FontAwesomeIconView>
+                           </graphic>
+                        </Button>
+                        <Label alignment="CENTER" layoutX="356.0" layoutY="52.0" prefHeight="25.0" prefWidth="86.0" text="00:00/00:00">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <FontAwesomeIconView glyphName="MUSIC" layoutX="14.0" layoutY="199.0" size="24" />
                      </children>
                   </AnchorPane>
                </children>
             </AnchorPane>
-            <Slider fx:id="sliderVolume" layoutX="125.0" layoutY="598.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="331.0" AnchorPane.leftAnchor="95.0" AnchorPane.topAnchor="598.0" />
-            <ImageView fx:id="albumArt" fitHeight="120.0" fitWidth="120.0" layoutX="221.0" layoutY="257.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="190.0" />
-            <AnchorPane prefHeight="70.0" prefWidth="500.0" AnchorPane.topAnchor="630.0">
-               <children>
-                  <Button fx:id="createPlaylist" layoutX="152.0" layoutY="10.0" mnemonicParsing="false" onAction="#onFileButtonPressed" prefHeight="50.0" prefWidth="200.0" text="Open File Directory" AnchorPane.leftAnchor="154.0" AnchorPane.topAnchor="10.0" />
-               </children>
-            </AnchorPane>
+            <Slider fx:id="sliderVolume" layoutX="79.0" layoutY="600.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="300.0" AnchorPane.leftAnchor="79.0" AnchorPane.topAnchor="600.0" />
+            <AnchorPane layoutX="184.0" layoutY="264.0" prefHeight="136.0" prefWidth="134.0" style="-fx-background-color: e5e5e5; -fx-background-radius: 10px;" />
+            <ImageView fx:id="albumArt" fitHeight="120.0" fitWidth="120.0" layoutX="190.0" layoutY="272.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="190.0" />
+            <Label alignment="CENTER" layoutX="250.0" layoutY="29.0" prefHeight="17.0" prefWidth="230.0" text="Songs">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="20.0" layoutY="29.0" prefHeight="17.0" prefWidth="230.0" text="Playlists">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Button fx:id="createPlaylist1" layoutX="393.0" layoutY="264.0" mnemonicParsing="false" onAction="#refreshPlaylistItems" prefHeight="24.0" prefWidth="86.0" text="Refresh" textFill="#003049">
+               <font>
+                  <Font name="SansSerif Regular" size="16.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
    </children>
