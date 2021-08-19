@@ -11,6 +11,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.media.MediaView?>
@@ -53,8 +54,12 @@
    </VBox>
    <Pane prefHeight="91.0" prefWidth="346.0">
       <children>
-         <ImageView fx:id="albumArt" fitHeight="75.0" fitWidth="80.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true" />
-         <TextArea fx:id="metaDisplay" layoutX="82.0" prefHeight="69.0" prefWidth="264.0" style="-fx-background-color: ADD8E6;" />
+         <HBox layoutY="-3.0">
+            <children>
+               <ImageView fx:id="albumArt" fitHeight="75.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" />
+               <TextArea fx:id="metaDisplay" prefHeight="69.0" prefWidth="264.0" style="-fx-background-color: ADD8E6;" />
+            </children>
+         </HBox>
       </children>
    </Pane>
    <Slider fx:id="sliderSeeker" />
@@ -67,7 +72,7 @@
    </AnchorPane>
 
     <Label fx:id="welcomeText" />
-   <ToolBar>
+   <ToolBar nodeOrientation="LEFT_TO_RIGHT">
       <items>
          <Slider fx:id="sliderVolume" prefHeight="14.0" prefWidth="168.0">
             <padding>

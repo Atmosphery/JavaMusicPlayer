@@ -58,9 +58,6 @@ public class Controller implements Initializable {
     private Button nextButton;
     @FXML
     private ImageView albumArt;
-    private String title = "Title not Found";
-    private String artist = "Artist not Found";
-    private String album = "Album not Found";
 
 
 
@@ -153,17 +150,25 @@ public class Controller implements Initializable {
 
     @FXML
     public void onClickTableItem(MouseEvent mouse) {
+        pausePlay.setText("||");
+        isPaused = true;
+        mediaPlayer.pause();
         songView.getItems().clear();
         String name = playlistView.getSelectionModel().getSelectedItem();
         if (name != null){
             ArrayList<Playlist> playlist = PlaylistController.getRootPlaylist();
             ArrayList<Song> songs = new ArrayList<>();
-
             for (Playlist p: playlist){
                 if (p.getPlaylistName().equals(name)){
-                    playListIndex = 0;
-                    currentPlaylist = p;
+                    songIndex = 0;
                     songs = p.getSongs();
+                    currentSong = songs.get(songIndex).getSong();
+                    media = new Media(currentSong.toURI().toString());
+                    loadMetaData(media);
+                    mediaPlayer = new MediaPlayer(media);
+                    mediaView.setMediaPlayer(mediaPlayer);
+                    loadMusicSeeker();
+                    currentPlaylist = p;
                     for (Song s: songs){
                         songView.getItems().add(s.getTitle());
                     }
