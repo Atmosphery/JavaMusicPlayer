@@ -57,9 +57,6 @@ public class Controller implements Initializable {
     private Button nextButton;
     @FXML
     private ImageView albumArt;
-    private String title = "Title not Found";
-    private String artist = "Artist not Found";
-    private String album = "Album not Found";
 
 
 
@@ -150,11 +147,13 @@ public class Controller implements Initializable {
                     playListIndex = 0;
                     songIndex = 0;
                     songs = p.getSongs();
-                    currentSong = songs.get(songIndex).getSong();
-                    media = new Media(currentSong.toURI().toString());
-                    loadMetaData(media);
-                    mediaPlayer = new MediaPlayer(media);
-                    mediaView.setMediaPlayer(mediaPlayer);
+                    if (songs.size() != 0){
+                        currentSong = songs.get(songIndex).getSong();
+                        media = new Media(currentSong.toURI().toString());
+                        loadMetaData(media);
+                        mediaPlayer = new MediaPlayer(media);
+                        mediaView.setMediaPlayer(mediaPlayer);
+                    }
                     loadMusicSeeker();
                     setOnEndOfMedia();
                     currentPlaylist = p;
@@ -213,6 +212,15 @@ public class Controller implements Initializable {
 
     }
 
+    public void loadPlaylistItems() {
+        ArrayList<Playlist> playlists = PlaylistController.getRootPlaylist();
+        ObservableList<String> list = FXCollections.observableArrayList();
+        for (Playlist p : playlists){
+            list.add(p.getPlaylistName());
+        }
+        playlistView.setItems(list);
+    }
+    
     @FXML
     protected void onPauseButtonPressed() {
         isPaused = !isPaused;
@@ -355,14 +363,7 @@ public class Controller implements Initializable {
         mediaPlayer.play();
     }
 
-    public void loadPlaylistItems() {
-        ArrayList<Playlist> playlists = PlaylistController.getRootPlaylist();
-        ObservableList<String> list = FXCollections.observableArrayList();
-        for (Playlist p : playlists){
-            list.add(p.getPlaylistName());
-        }
-        playlistView.setItems(list);
-    }
+
 
     public void loadMusicSeeker() {
         mediaPlayer.setOnReady(() -> {
@@ -446,9 +447,7 @@ public class Controller implements Initializable {
                         pausePlay.setText(">");
                         mediaPlayer.play();
                     }
-
                     break;
-
             }
         });
     }
