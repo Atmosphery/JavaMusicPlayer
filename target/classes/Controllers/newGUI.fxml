@@ -11,7 +11,6 @@
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="800.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Controller">
    <children>
       <AnchorPane minHeight="80.0" minWidth="500.0" prefHeight="80.0" prefWidth="500.0" style="-fx-background-color: red;">
@@ -31,12 +30,12 @@
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="220.0">
                            <children>
-                              <ListView fx:id="songView" onMouseClicked="#onClickSongItem" prefHeight="200.0" prefWidth="230.0" />
+                              <ListView fx:id="playlistView" onMouseClicked="#onClickTableItem" prefHeight="200.0" prefWidth="230.0" />
                            </children>
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="220.0">
                            <children>
-                              <ListView fx:id="playlistView" onMouseClicked="#onClickTableItem" prefHeight="200.0" prefWidth="230.0" AnchorPane.rightAnchor="0.0" />
+                              <ListView fx:id="songView" onMouseClicked="#onClickSongItem" prefHeight="200.0" prefWidth="230.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                     </items>
@@ -50,7 +49,7 @@
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="440.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="400.0">
                <children>
-                  <TextArea fx:id="metaDisplay" prefHeight="40.0" prefWidth="440.0" AnchorPane.topAnchor="10.0" />
+                  <TextArea fx:id="metaDisplay" layoutY="-11.0" prefHeight="61.0" prefWidth="440.0" AnchorPane.topAnchor="-11.0" />
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="20.0">
                      <children>
                         <Slider fx:id="sliderSeeker" prefHeight="1.0" prefWidth="400.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="50.0" />
