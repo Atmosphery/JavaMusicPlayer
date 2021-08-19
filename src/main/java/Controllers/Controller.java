@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
@@ -23,14 +24,13 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Duration;
-
+import javafx.collections.MapChangeListener;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
-    createMusicPlayer musicPlayer;
 
     @FXML
     private MediaView mediaView;
@@ -58,6 +58,9 @@ public class Controller implements Initializable {
     private Button nextButton;
     @FXML
     private ImageView albumArt;
+    private String title = "Title not Found";
+    private String artist = "Artist not Found";
+    private String album = "Album not Found";
 
 
 
@@ -108,12 +111,12 @@ public class Controller implements Initializable {
 
         currentPlaylist = new Playlist(p.get(playListIndex).getPlaylistFile());
         currentSong = s.get(songIndex).getSong();
-        Media m = new Media (currentSong.toURI().toString());
-        musicPlayer = new createMusicPlayer(currentSong);
 
-        mediaPlayer = musicPlayer.getPlayer();
+        media = new Media (currentSong.toURI().toString());
+        loadMetaData(media);
+        mediaPlayer = new MediaPlayer(media);
 
-        mediaView.setMediaPlayer(musicPlayer.getPlayer());
+        mediaView.setMediaPlayer(mediaPlayer);
         mediaPlayer.setOnEndOfMedia(() -> {
             switch (repeatAmt) {
                 case 1:
@@ -131,12 +134,6 @@ public class Controller implements Initializable {
 
             }
         });
-
-        metaDisplay.setText("Title: " + musicPlayer.getTitle() + "\n" +
-                "Album: " + musicPlayer.getAlbum() + "\n" +
-                "Artist: " + musicPlayer.getArtist() + "\n");
-        albumArt.setImage(musicPlayer.getAlbumArt());
-
         sliderVolume.setValue(mediaPlayer.getVolume() * 100);
         sliderVolume.valueProperty().addListener(new InvalidationListener() {
             @Override
@@ -178,8 +175,10 @@ public class Controller implements Initializable {
     @FXML
     public void onClickSongItem(MouseEvent mouse) {
         isPaused = true;
+        albumArt.setImage(null);
         pausePlay.setText("||");
         mediaPlayer.pause();
+
         String name = songView.getSelectionModel().getSelectedItem();
         if(name != null) {
             ArrayList<Song> songs = currentPlaylist.getSongs();
@@ -187,21 +186,34 @@ public class Controller implements Initializable {
                 if(s.getTitle().equals(name)) {
                     currentSong = s.getSong();
                     media = new Media(currentSong.toURI().toString());
-
-                    musicPlayer.changeMedia(media);
-
-                    mediaPlayer = musicPlayer.getPlayer();
+                    loadMetaData(media);
+                    mediaPlayer = new MediaPlayer(media);
                     mediaView.setMediaPlayer(mediaPlayer);
                     loadMusicSeeker();
-
-                    metaDisplay.setText("Title: " + musicPlayer.getTitle() + "\n" +
-                            "Album: " + musicPlayer.getAlbum() + "\n" +
-                            "Artist: " + musicPlayer.getArtist() + "\n");
-                    albumArt.setImage(musicPlayer.getAlbumArt());
-
+                    songIndex = s.getIndex();
                 }
+
             }
         }
+
+    }
+
+    public void loadMetaData(Media media) {
+        StringBuilder sb = new StringBuilder();
+        media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object > change) -> {
+            if(change.wasAdded()){
+                if("title".equals(change.getKey())){
+                    sb.append("Title: ").append(change.getValueAdded().toString()).append("\n");
+                }else if("artist".equals(change.getKey())){
+                    sb.append("Artist: ").append(change.getValueAdded().toString()).append("\n");
+                }else if("album".equals(change.getKey())){
+                    sb.append("Album: ").append(change.getValueAdded().toString()).append("\n");
+                }else if("image".equals(change.getKey())){
+                    albumArt.setImage((Image) change.getValueAdded());
+                }
+                metaDisplay.setText(sb.toString());
+            }
+        });
 
     }
 
@@ -299,19 +311,11 @@ public class Controller implements Initializable {
 
         mediaPlayer.stop();
         mediaPlayer.dispose();
-
-        musicPlayer.changeMedia(media);
-
-        mediaPlayer = musicPlayer.getPlayer();
+        mediaPlayer = new MediaPlayer(media);
+        loadMetaData(media);
         loadMusicSeeker();
         pausePlay.setText(">");
         mediaPlayer.play();
-
-        metaDisplay.setText("Title: " + musicPlayer.getTitle() +
-                "Album: " + musicPlayer.getAlbum() +
-                "Artist: " + musicPlayer.getArtist());
-        albumArt.setImage(musicPlayer.getAlbumArt());
-
     }
 
     @FXML
@@ -345,25 +349,15 @@ public class Controller implements Initializable {
             }
         }
         mediaPlayer.stop();
-
         mediaPlayer.dispose();
-
         //Do NOT remove file:// from the beginning of this - Media expects a url to a resource, not a direct file path. The format here is required for it to
         //function.
 
-        musicPlayer.changeMedia(media);
-        mediaPlayer = musicPlayer.getPlayer();
-
+        mediaPlayer = new MediaPlayer(media);
+        loadMetaData(media);
         loadMusicSeeker();
         pausePlay.setText(">");
         mediaPlayer.play();
-
-        metaDisplay.setText("Title: " + musicPlayer.getTitle() +
-                "Album: " + musicPlayer.getAlbum() +
-                "Artist: " + musicPlayer.getArtist());
-        albumArt.setImage(musicPlayer.getAlbumArt());
-
-
     }
 
     public void loadPlaylistItems() {

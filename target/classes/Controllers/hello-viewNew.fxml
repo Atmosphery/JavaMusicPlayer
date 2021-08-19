@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="800.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Controller">
+   <children>
+      <AnchorPane minHeight="80.0" minWidth="500.0" prefHeight="80.0" prefWidth="500.0" style="-fx-background-color: red;">
+         <children>
+            <Label text="Media Tonic" AnchorPane.leftAnchor="163.0" AnchorPane.topAnchor="20.0">
+               <font>
+                  <Font name="Bauhaus 93" size="32.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="6.0" layoutY="72.0" minHeight="720.0" minWidth="500.0" prefHeight="720.0" prefWidth="500.0" style="-fx-background-color: blue;" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="80.0">
+         <children>
+            <AnchorPane layoutY="76.0" prefHeight="200.0" prefWidth="440.0" AnchorPane.topAnchor="40.0">
+               <children>
+                  <SplitPane dividerPositions="0.5" prefHeight="200.0" prefWidth="460.0" AnchorPane.leftAnchor="20.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="220.0">
+                           <children>
+                              <ListView fx:id="songView" onMouseClicked="#onClickSongItem" prefHeight="200.0" prefWidth="230.0" />
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="220.0">
+                           <children>
+                              <ListView fx:id="playlistView" onMouseClicked="#onClickTableItem" prefHeight="200.0" prefWidth="230.0" AnchorPane.rightAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="70.0" prefWidth="500.0" AnchorPane.topAnchor="630.0">
+               <children>
+                  <Button fx:id="createPlaylist" layoutX="152.0" layoutY="10.0" mnemonicParsing="false" onAction="#onFileButtonPressed" prefHeight="50.0" prefWidth="200.0" text="Open File Directory" AnchorPane.leftAnchor="154.0" AnchorPane.topAnchor="10.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="200.0" prefWidth="440.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="400.0">
+               <children>
+                  <TextArea fx:id="metaDisplay" prefHeight="40.0" prefWidth="440.0" AnchorPane.topAnchor="10.0" />
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="20.0">
+                     <children>
+                        <Slider fx:id="sliderSeeker" prefHeight="1.0" prefWidth="400.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="50.0" />
+                        <Button fx:id="nextButton" layoutX="282.0" layoutY="115.0" mnemonicParsing="false" onAction="#changeToNextSong" prefHeight="50.0" prefWidth="50.0" text="Next" AnchorPane.leftAnchor="272.0" AnchorPane.topAnchor="102.0" />
+                        <MediaView fx:id="mediaView" visible="false" />
+                        <Button fx:id="pausePlay" onAction="#onPauseButtonPressed" prefHeight="74.0" prefWidth="74.0" AnchorPane.leftAnchor="181.0" AnchorPane.topAnchor="90.0">
+                           <graphic>
+                              <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                           </graphic>
+                        </Button>
+                        <Button fx:id="prevButton" layoutX="105.0" layoutY="92.0" mnemonicParsing="false" onAction="#changeToPrevSong" prefHeight="50.0" prefWidth="50.0" text="Prev." AnchorPane.leftAnchor="115.0" AnchorPane.topAnchor="102.0" />
+                        <Button fx:id="repeat" layoutX="356.0" layoutY="107.0" mnemonicParsing="false" onAction="#onRepeatButtonPressed" prefHeight="50.0" prefWidth="50.0" text="R1" AnchorPane.leftAnchor="356.0" AnchorPane.topAnchor="102.0" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+            <Slider fx:id="sliderVolume" layoutX="125.0" layoutY="598.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="331.0" AnchorPane.leftAnchor="95.0" AnchorPane.topAnchor="598.0" />
+            <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="221.0" layoutY="257.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="190.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

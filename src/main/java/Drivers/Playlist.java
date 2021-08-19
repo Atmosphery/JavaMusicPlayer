@@ -30,9 +30,10 @@ public class Playlist implements Serializable {
             this.playlistName = playlistFile.getName();
             playList = new ArrayList<Song>();
             File[] musicList = playlistFile.listFiles();
-
+            int index = 0;
             for (File f: musicList){
-                Song song = new Song(f);
+                Song song = new Song(f, index);
+                index++;
                 String path = song.getFilePath();
                 if (path.endsWith(".mp3") || path.endsWith(".mp4") || path.endsWith(".wav") || path.endsWith(".m4a")){
                     playList.add(song);
