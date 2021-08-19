@@ -3,7 +3,6 @@ package Controllers;
 import Drivers.Playlist;
 import Drivers.PlaylistController;
 import Drivers.Song;
-import Drivers.createMusicPlayer;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
@@ -58,6 +57,9 @@ public class Controller implements Initializable {
     private Button nextButton;
     @FXML
     private ImageView albumArt;
+    private String title = "Title not Found";
+    private String artist = "Artist not Found";
+    private String album = "Album not Found";
 
 
 
@@ -112,25 +114,9 @@ public class Controller implements Initializable {
         media = new Media (currentSong.toURI().toString());
         loadMetaData(media);
         mediaPlayer = new MediaPlayer(media);
-
+        setOnEndOfMedia();
         mediaView.setMediaPlayer(mediaPlayer);
-        mediaPlayer.setOnEndOfMedia(() -> {
-            switch (repeatAmt) {
-                case 1:
-                    //Repeat Song
-                    mediaPlayer.seek(Duration.ZERO);
-                    break;
-                case 2:
-                    //Repeat Arraylist
-                    //Maybe consider this being separate from the end of the song.
-                    System.out.println("Playlist Check");
-                    break;
-                default:
-                    //No repeat
-                    break;
 
-            }
-        });
         sliderVolume.setValue(mediaPlayer.getVolume() * 100);
         sliderVolume.valueProperty().addListener(new InvalidationListener() {
             @Override
@@ -158,8 +144,10 @@ public class Controller implements Initializable {
         if (name != null){
             ArrayList<Playlist> playlist = PlaylistController.getRootPlaylist();
             ArrayList<Song> songs = new ArrayList<>();
+
             for (Playlist p: playlist){
                 if (p.getPlaylistName().equals(name)){
+                    playListIndex = 0;
                     songIndex = 0;
                     songs = p.getSongs();
                     currentSong = songs.get(songIndex).getSong();
@@ -168,7 +156,9 @@ public class Controller implements Initializable {
                     mediaPlayer = new MediaPlayer(media);
                     mediaView.setMediaPlayer(mediaPlayer);
                     loadMusicSeeker();
+                    setOnEndOfMedia();
                     currentPlaylist = p;
+                    songs = p.getSongs();
                     for (Song s: songs){
                         songView.getItems().add(s.getTitle());
                     }
@@ -193,6 +183,7 @@ public class Controller implements Initializable {
                     media = new Media(currentSong.toURI().toString());
                     loadMetaData(media);
                     mediaPlayer = new MediaPlayer(media);
+                    setOnEndOfMedia();
                     mediaView.setMediaPlayer(mediaPlayer);
                     loadMusicSeeker();
                     songIndex = s.getIndex();
@@ -319,6 +310,7 @@ public class Controller implements Initializable {
         mediaPlayer = new MediaPlayer(media);
         loadMetaData(media);
         loadMusicSeeker();
+        setOnEndOfMedia();
         pausePlay.setText(">");
         mediaPlayer.play();
     }
@@ -355,12 +347,10 @@ public class Controller implements Initializable {
         }
         mediaPlayer.stop();
         mediaPlayer.dispose();
-        //Do NOT remove file:// from the beginning of this - Media expects a url to a resource, not a direct file path. The format here is required for it to
-        //function.
-
         mediaPlayer = new MediaPlayer(media);
         loadMetaData(media);
         loadMusicSeeker();
+        setOnEndOfMedia();
         pausePlay.setText(">");
         mediaPlayer.play();
     }
@@ -415,4 +405,51 @@ public class Controller implements Initializable {
         });
     }
 
+    //Built this because everytime we created a new musicplayer object, the listener would be nuked and we'd have no replay functionality.
+    //Use whenever creating a new musicplayer object.
+    public void setOnEndOfMedia(){
+        mediaPlayer.setOnEndOfMedia(() -> {
+            switch (repeatAmt) {
+                case 1:
+                    //Repeat Song
+                    mediaPlayer.seek(Duration.ZERO);
+                    break;
+                case 2:
+                    //Repeat Arraylist
+                    //Maybe consider this being separate from the end of the song.
+                    System.out.println("Playlist Check");
+                    mediaPlayer.dispose();
+
+                    if(!((songIndex + 1) > currentPlaylist.getSongs().size() - 1)){
+                        songIndex ++;
+                    }else{
+                        songIndex = 0;
+                    }
+                    currentSong = currentPlaylist.getSongs().get(songIndex).getSong();
+                    media = new Media(currentPlaylist.getSongs().get(songIndex).getSong().toURI().toString());
+                    mediaPlayer = new MediaPlayer(media);
+                    loadMetaData(media);
+                    loadMusicSeeker();
+                    pausePlay.setText(">");
+                    mediaPlayer.play();
+                    break;
+                default:
+                    //No repeat
+
+                    if(!((songIndex + 1) > currentPlaylist.getSongs().size() - 1)){
+                        songIndex ++;
+                        currentSong = currentPlaylist.getSongs().get(songIndex).getSong();
+                        media = new Media(currentPlaylist.getSongs().get(songIndex).getSong().toURI().toString());
+                        mediaPlayer = new MediaPlayer(media);
+                        loadMetaData(media);
+                        loadMusicSeeker();
+                        pausePlay.setText(">");
+                        mediaPlayer.play();
+                    }
+
+                    break;
+
+            }
+        });
+    }
 }
