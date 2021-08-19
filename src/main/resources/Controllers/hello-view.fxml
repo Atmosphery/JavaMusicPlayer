@@ -44,7 +44,8 @@
                </AnchorPane>
              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="47.0" prefWidth="344.0">
                   <children>
-                     <Button fx:id="createPlaylist" layoutX="7.0" layoutY="7.0" mnemonicParsing="false" onAction="#onFileButtonPressed" text="Create New Playlist" />
+                     <Button fx:id="refresh" layoutX="276.0" layoutY="8.0" mnemonicParsing="false" onAction="#refreshPlaylistItems" text="Refresh" />
+                     <Button fx:id="createPlaylist" layoutX="14.0" layoutY="8.0" mnemonicParsing="false" onAction="#onFileButtonPressed" text="Create New Playlist" />
                   </children>
                </AnchorPane>
            </items>

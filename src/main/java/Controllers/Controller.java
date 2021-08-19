@@ -3,13 +3,12 @@ package Controllers;
 import Drivers.Playlist;
 import Drivers.PlaylistController;
 import Drivers.Song;
-import Drivers.createMusicPlayer;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -24,7 +23,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Duration;
-import javafx.collections.MapChangeListener;
+
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -58,9 +57,6 @@ public class Controller implements Initializable {
     private Button nextButton;
     @FXML
     private ImageView albumArt;
-    private String title = "Title not Found";
-    private String artist = "Artist not Found";
-    private String album = "Album not Found";
 
 
 
@@ -82,20 +78,6 @@ public class Controller implements Initializable {
         pausePlay.setText("||");
         updatePlaylists();
 
-        playlistView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                onClickTableItem(mouseEvent);
-            }
-        });
-
-        songView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                onClickSongItem(mouseEvent);
-            }
-        });
-
         ArrayList<Playlist> p = PlaylistController.getRootPlaylist();
         ArrayList<Song> s = null;
         boolean loop = true;
@@ -115,25 +97,9 @@ public class Controller implements Initializable {
         media = new Media (currentSong.toURI().toString());
         loadMetaData(media);
         mediaPlayer = new MediaPlayer(media);
-
+        setOnEndOfMedia();
         mediaView.setMediaPlayer(mediaPlayer);
-        mediaPlayer.setOnEndOfMedia(() -> {
-            switch (repeatAmt) {
-                case 1:
-                    //Repeat Song
-                    mediaPlayer.seek(Duration.ZERO);
-                    break;
-                case 2:
-                    //Repeat Arraylist
-                    //Maybe consider this being separate from the end of the song.
-                    System.out.println("Playlist Check");
-                    break;
-                default:
-                    //No repeat
-                    break;
 
-            }
-        });
         sliderVolume.setValue(mediaPlayer.getVolume() * 100);
         sliderVolume.valueProperty().addListener(new InvalidationListener() {
             @Override
@@ -144,15 +110,11 @@ public class Controller implements Initializable {
         loadMusicSeeker();
     }
 
-    public void updatePlaylists() {
-        PlaylistController.importAllPlaylists("Playlists");
-        PlaylistController.saveRootPlaylist(saveSerialized);
-        PlaylistController.loadRootPlaylist(saveSerialized);
-        loadPlaylistItems();
-    }
-
     @FXML
     public void onClickTableItem(MouseEvent mouse) {
+        pausePlay.setText("||");
+        isPaused = true;
+        mediaPlayer.pause();
         songView.getItems().clear();
         String name = playlistView.getSelectionModel().getSelectedItem();
         if (name != null){
@@ -162,6 +124,17 @@ public class Controller implements Initializable {
             for (Playlist p: playlist){
                 if (p.getPlaylistName().equals(name)){
                     playListIndex = 0;
+                    songIndex = 0;
+                    songs = p.getSongs();
+                    if (songs.size() != 0){
+                        currentSong = songs.get(songIndex).getSong();
+                        media = new Media(currentSong.toURI().toString());
+                        loadMetaData(media);
+                        mediaPlayer = new MediaPlayer(media);
+                        mediaView.setMediaPlayer(mediaPlayer);
+                    }
+                    loadMusicSeeker();
+                    setOnEndOfMedia();
                     currentPlaylist = p;
                     songs = p.getSongs();
                     for (Song s: songs){
@@ -188,6 +161,7 @@ public class Controller implements Initializable {
                     media = new Media(currentSong.toURI().toString());
                     loadMetaData(media);
                     mediaPlayer = new MediaPlayer(media);
+                    setOnEndOfMedia();
                     mediaView.setMediaPlayer(mediaPlayer);
                     loadMusicSeeker();
                     songIndex = s.getIndex();
@@ -195,7 +169,6 @@ public class Controller implements Initializable {
 
             }
         }
-
     }
 
     public void loadMetaData(Media media) {
@@ -215,6 +188,27 @@ public class Controller implements Initializable {
             }
         });
 
+    }
+
+    public void loadPlaylistItems() {
+        ArrayList<Playlist> playlists = PlaylistController.getRootPlaylist();
+        ObservableList<String> list = FXCollections.observableArrayList();
+        for (Playlist p : playlists){
+            list.add(p.getPlaylistName());
+        }
+        playlistView.setItems(list);
+    }
+
+    public void updatePlaylists() {
+        PlaylistController.importAllPlaylists("Playlists");
+        PlaylistController.saveRootPlaylist(saveSerialized);
+        PlaylistController.loadRootPlaylist(saveSerialized);
+        loadPlaylistItems();
+    }
+
+    @FXML
+    protected void refreshPlaylistItems() {
+        updatePlaylists();
     }
 
     @FXML
@@ -314,6 +308,7 @@ public class Controller implements Initializable {
         mediaPlayer = new MediaPlayer(media);
         loadMetaData(media);
         loadMusicSeeker();
+        setOnEndOfMedia();
         pausePlay.setText(">");
         mediaPlayer.play();
     }
@@ -350,23 +345,12 @@ public class Controller implements Initializable {
         }
         mediaPlayer.stop();
         mediaPlayer.dispose();
-        //Do NOT remove file:// from the beginning of this - Media expects a url to a resource, not a direct file path. The format here is required for it to
-        //function.
-
         mediaPlayer = new MediaPlayer(media);
         loadMetaData(media);
         loadMusicSeeker();
+        setOnEndOfMedia();
         pausePlay.setText(">");
         mediaPlayer.play();
-    }
-
-    public void loadPlaylistItems() {
-        ArrayList<Playlist> playlists = PlaylistController.getRootPlaylist();
-        ObservableList<String> list = FXCollections.observableArrayList();
-        for (Playlist p : playlists){
-            list.add(p.getPlaylistName());
-        }
-        playlistView.setItems(list);
     }
 
     public void loadMusicSeeker() {
@@ -410,4 +394,49 @@ public class Controller implements Initializable {
         });
     }
 
+    //Built this because everytime we created a new musicplayer object, the listener would be nuked and we'd have no replay functionality.
+    //Use whenever creating a new musicplayer object.
+    public void setOnEndOfMedia(){
+        mediaPlayer.setOnEndOfMedia(() -> {
+            switch (repeatAmt) {
+                case 1:
+                    //Repeat Song
+                    mediaPlayer.seek(Duration.ZERO);
+                    break;
+                case 2:
+                    //Repeat Arraylist
+                    //Maybe consider this being separate from the end of the song.
+                    System.out.println("Playlist Check");
+                    mediaPlayer.dispose();
+
+                    if(!((songIndex + 1) > currentPlaylist.getSongs().size() - 1)){
+                        songIndex ++;
+                    }else{
+                        songIndex = 0;
+                    }
+                    currentSong = currentPlaylist.getSongs().get(songIndex).getSong();
+                    media = new Media(currentPlaylist.getSongs().get(songIndex).getSong().toURI().toString());
+                    mediaPlayer = new MediaPlayer(media);
+                    loadMetaData(media);
+                    loadMusicSeeker();
+                    pausePlay.setText(">");
+                    mediaPlayer.play();
+                    break;
+                default:
+                    //No repeat
+
+                    if(!((songIndex + 1) > currentPlaylist.getSongs().size() - 1)){
+                        songIndex ++;
+                        currentSong = currentPlaylist.getSongs().get(songIndex).getSong();
+                        media = new Media(currentPlaylist.getSongs().get(songIndex).getSong().toURI().toString());
+                        mediaPlayer = new MediaPlayer(media);
+                        loadMetaData(media);
+                        loadMusicSeeker();
+                        pausePlay.setText(">");
+                        mediaPlayer.play();
+                    }
+                    break;
+            }
+        });
+    }
 }

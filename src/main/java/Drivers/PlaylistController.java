@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class PlaylistController {
-    private static ArrayList<Playlist> rootPlaylist = new ArrayList<>();
+    private static ArrayList<Playlist> rootPlaylist;
     private final static String rootPlaylistPath = "Playlists\\";
 
 
@@ -43,6 +43,7 @@ public class PlaylistController {
 
     //Lists all of the playlists in the rootPlaylist Array
     public static void importAllPlaylists(String path) {
+        rootPlaylist = new ArrayList<>();
         File temp = new File(path);
         File[] tempArr = temp.listFiles();
 
