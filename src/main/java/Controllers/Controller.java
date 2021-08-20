@@ -4,7 +4,6 @@ import Drivers.Playlist;
 import Drivers.PlaylistController;
 import Drivers.Song;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
 import javafx.beans.InvalidationListener;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.Observable;
