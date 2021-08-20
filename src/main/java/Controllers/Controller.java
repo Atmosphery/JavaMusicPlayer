@@ -70,7 +70,7 @@ public class Controller implements Initializable {
     String saveSerialized = "playlists.txt";
     Playlist currentPlaylist;
     double currentVolume;
-    Image defaultImage = new Image(getClass().getResourceAsStream("itunes-icloud-status-error-icon.png"));
+    Image defaultImage = new Image(getClass().getResourceAsStream("noteIMG.png"));
 
 
 
