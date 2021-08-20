@@ -9,25 +9,27 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Controller">
+<VBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Controller">
    <children>
-      <AnchorPane minHeight="80.0" minWidth="500.0" prefHeight="80.0" prefWidth="500.0" style="-fx-background-color: e5e5e5;">
+      <HBox alignment="CENTER" minHeight="80.0" minWidth="500.0" prefHeight="80.0" prefWidth="500.0">
          <children>
-            <Label text="Mega Media" textFill="#14213d" AnchorPane.leftAnchor="163.0" AnchorPane.topAnchor="20.0">
+            <Label text="Mega Media" textFill="#14213d">
                <font>
                   <Font name="SansSerif Bold" size="32.0" />
                </font>
             </Label>
          </children>
-      </AnchorPane>
-      <AnchorPane layoutX="6.0" layoutY="72.0" minHeight="720.0" minWidth="500.0" prefHeight="720.0" prefWidth="500.0" style="-fx-background-color: linear-gradient(ffffff,e5e5e5);" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="80.0">
+      </HBox>
+      <AnchorPane minHeight="720.0" minWidth="500.0" prefHeight="720.0" prefWidth="500.0" style="-fx-background-color: linear-gradient(ffffff,e5e5e5);">
          <children>
-            <AnchorPane layoutY="76.0" prefHeight="188.0" prefWidth="480.0" AnchorPane.topAnchor="60.0">
+            <HBox alignment="CENTER" layoutX="20.0" layoutY="60.0">
                <children>
-                  <SplitPane dividerPositions="0.5" prefHeight="200.0" prefWidth="460.0" AnchorPane.leftAnchor="20.0">
+                  <SplitPane dividerPositions="0.5" prefHeight="200.0" prefWidth="460.0">
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="172.0" prefWidth="226.0">
                            <children>
@@ -42,16 +44,8 @@
                     </items>
                   </SplitPane>
                </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="70.0" prefWidth="500.0" AnchorPane.topAnchor="630.0">
-               <children>
-                  <Button fx:id="createPlaylist" layoutX="150.0" layoutY="14.0" mnemonicParsing="false" onAction="#onFileButtonPressed" prefHeight="50.0" prefWidth="200.0" text="Open File Directory" textFill="#003049" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="14.0">
-                     <font>
-                        <Font name="SansSerif Regular" size="20.0" />
-                     </font></Button>
-               </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="200.0" prefWidth="440.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="400.0">
+            </HBox>
+            <AnchorPane layoutX="30.0" layoutY="400.0" prefHeight="200.0" prefWidth="440.0">
                <children>
                   <TextArea fx:id="metaDisplay" editable="false" layoutY="-12.0" prefHeight="74.0" prefWidth="440.0" AnchorPane.topAnchor="5.0" />
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-radius: 0px;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="20.0">
@@ -64,11 +58,12 @@
                                     <Font size="40.0" />
                                  </font>
                               </FontAwesomeIconView>
-                           </graphic></Button>
+                           </graphic>
+                        </Button>
                         <MediaView fx:id="mediaView" visible="false" />
                         <Button fx:id="pausePlay" onAction="#onPauseButtonPressed" prefHeight="74.0" prefWidth="74.0" style="-fx-border-radius: 100px; -fx-background-radius: 100px;" AnchorPane.leftAnchor="181.0" AnchorPane.topAnchor="90.0">
                            <graphic>
-                              <FontAwesomeIconView fx:id="playPauseImage" fill="#14213d" glyphName="PAUSE" size="45" textAlignment="CENTER">
+                              <FontAwesomeIconView fx:id="pausePlayIcon" fill="#14213d" glyphName="PAUSE" size="45" textAlignment="CENTER">
                                  <font>
                                     <Font size="40.0" />
                                  </font>
@@ -82,7 +77,8 @@
                                     <Font size="40.0" />
                                  </font>
                               </FontAwesomeIconView>
-                           </graphic></Button>
+                           </graphic>
+                        </Button>
                         <Button fx:id="repeat" layoutX="361.0" layoutY="171.0" mnemonicParsing="false" onAction="#onRepeatButtonPressed" prefHeight="40.0" prefWidth="76.0" style="-fx-background-radius: 15px;" AnchorPane.leftAnchor="361.0" AnchorPane.topAnchor="171.0">
                            <graphic>
                               <FontAwesomeIconView fx:id="repeatImage" fill="#14213d" glyphName="TIMES" size="25" textAlignment="CENTER">
@@ -102,9 +98,9 @@
                   </AnchorPane>
                </children>
             </AnchorPane>
-            <Slider fx:id="sliderVolume" layoutX="79.0" layoutY="600.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="300.0" AnchorPane.leftAnchor="79.0" AnchorPane.topAnchor="600.0" />
+            <Slider fx:id="sliderVolume" layoutX="79.0" layoutY="600.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="300.0" />
             <AnchorPane layoutX="184.0" layoutY="264.0" prefHeight="136.0" prefWidth="134.0" style="-fx-background-color: e5e5e5; -fx-background-radius: 10px;" />
-            <ImageView fx:id="albumArt" fitHeight="120.0" fitWidth="120.0" layoutX="190.0" layoutY="272.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="190.0" />
+            <ImageView fx:id="albumArt" fitHeight="120.0" fitWidth="120.0" layoutX="190.0" layoutY="272.0" pickOnBounds="true" preserveRatio="true" />
             <Label alignment="CENTER" layoutX="250.0" layoutY="29.0" prefHeight="17.0" prefWidth="230.0" text="Songs">
                <font>
                   <Font size="20.0" />
@@ -120,7 +116,16 @@
                   <Font name="SansSerif Regular" size="16.0" />
                </font>
             </Button>
+            <HBox alignment="CENTER" layoutX="150.0" layoutY="631.0">
+               <children>
+                  <Button fx:id="createPlaylist" mnemonicParsing="false" onAction="#onFileButtonPressed" prefHeight="50.0" prefWidth="200.0" text="Open File Directory" textFill="#003049">
+                     <font>
+                        <Font name="SansSerif Regular" size="20.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
          </children>
       </AnchorPane>
    </children>
-</AnchorPane>
+</VBox>

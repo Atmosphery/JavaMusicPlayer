@@ -3,6 +3,7 @@ module com.example.musicplayer {
     requires javafx.fxml;
     requires javafx.graphics;
     requires javafx.media;
+    requires de.jensd.fx.glyphs.fontawesome;
 
 
     opens Controllers to javafx.fxml;

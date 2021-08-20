@@ -3,10 +3,11 @@ package Controllers;
 import Drivers.Playlist;
 import Drivers.PlaylistController;
 import Drivers.Song;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.utils.FontAwesomeIconFactory;
 import javafx.beans.InvalidationListener;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
@@ -39,6 +40,8 @@ public class Controller implements Initializable {
     @FXML
     private Button pausePlay;
     @FXML
+    private Button play;
+    @FXML
     private Button repeat;
     @FXML
     private Slider sliderVolume;
@@ -58,7 +61,8 @@ public class Controller implements Initializable {
     private ImageView albumArt;
     @FXML
     private Label timeStamp;
-
+    @FXML
+    private FontAwesomeIconView pausePlayIcon;
 
     int repeatAmt = 1;
     boolean isPaused = false;
@@ -78,7 +82,7 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         System.out.println("Starting up!");
-        pausePlay.setText("||");
+        pausePlayIcon.setIcon(FontAwesomeIcon.PAUSE);
         updatePlaylists();
         albumArt.setImage(defaultImage);
         ArrayList<Playlist> p = PlaylistController.getRootPlaylist();
@@ -116,25 +120,15 @@ public class Controller implements Initializable {
 
     @FXML
     public void onClickTableItem(MouseEvent mouse) {
-        isPaused = true;
-        //mediaPlayer.pause();
         songView.getItems().clear();
         String name = playlistView.getSelectionModel().getSelectedItem();
         if (name != null){
             ArrayList<Playlist> playlist = PlaylistController.getRootPlaylist();
             ArrayList<Song> songs = new ArrayList<>();
-
             for (Playlist p: playlist){
                 if (p.getPlaylistName().equals(name)){
                     playListIndex = 0;
                     songIndex = 0;
-//                    if (songs.size() != 0){
-//                        currentSong = songs.get(songIndex).getSong();
-//                        media = new Media(currentSong.toURI().toString());
-//                        loadMetaData(media);
-//                        mediaPlayer = new MediaPlayer(media);
-//                        mediaView.setMediaPlayer(mediaPlayer);
-//                    }
                     loadMusicSeeker();
                     setOnEndOfMedia();
                     currentPlaylist = p;
@@ -167,7 +161,7 @@ public class Controller implements Initializable {
                     mediaPlayer.setVolume(sliderVolume.getValue() / 100);
                     mediaView.setMediaPlayer(mediaPlayer);
                     isPaused = false;
-                    pausePlay.setText(">");
+                    pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
                     mediaPlayer.play();
                     loadMusicSeeker();
                     songIndex = s.getIndex();
@@ -217,7 +211,12 @@ public class Controller implements Initializable {
 
     @FXML
     protected void refreshPlaylistItems() {
+        songView.getItems().clear();
         updatePlaylists();
+        ArrayList<Song> songs = currentPlaylist.getSongs();
+        for (Song s: songs){
+            songView.getItems().add(s.getTitle());
+        }
     }
 
     @FXML
@@ -225,11 +224,12 @@ public class Controller implements Initializable {
         isPaused = !isPaused;
         if (isPaused) {
             mediaPlayer.pause();
-            pausePlay.setText("||");
+            pausePlayIcon.setIcon(FontAwesomeIcon.PAUSE);
+
         }
         else {
             mediaPlayer.play();
-            pausePlay.setText(">");
+            pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
         }
     }
 
@@ -318,8 +318,8 @@ public class Controller implements Initializable {
         loadMetaData(media);
         loadMusicSeeker();
         setOnEndOfMedia();
-        mediaPlayer.setVolume(currentVolume);
-        pausePlay.setText(">");
+        mediaPlayer.setVolume(sliderVolume.getValue() / 100);
+        pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
         mediaPlayer.play();
     }
 
@@ -359,8 +359,8 @@ public class Controller implements Initializable {
         loadMetaData(media);
         loadMusicSeeker();
         setOnEndOfMedia();
-        mediaPlayer.setVolume(currentVolume);
-        pausePlay.setText(">");
+        mediaPlayer.setVolume(sliderVolume.getValue() / 100);
+        pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
         mediaPlayer.play();
     }
 
@@ -435,7 +435,7 @@ public class Controller implements Initializable {
                     mediaPlayer = new MediaPlayer(media);
                     loadMetaData(media);
                     loadMusicSeeker();
-                    pausePlay.setText(">");
+                    pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
                     mediaPlayer.play();
                     break;
                 default:
@@ -448,7 +448,7 @@ public class Controller implements Initializable {
                         mediaPlayer = new MediaPlayer(media);
                         loadMetaData(media);
                         loadMusicSeeker();
-                        pausePlay.setText(">");
+                        pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
                         mediaPlayer.play();
                     }
                     break;
