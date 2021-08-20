@@ -110,7 +110,6 @@ public class Controller implements Initializable {
                 currentVolume = sliderVolume.getValue() / 100;
             }
         });
-
         loadMusicSeeker();
     }
 
@@ -151,7 +150,6 @@ public class Controller implements Initializable {
     public void onClickSongItem(MouseEvent mouse) {
         isPaused = true;
         albumArt.setImage(null);
-        pausePlay.setText("||");
         mediaPlayer.pause();
 
 
@@ -167,8 +165,12 @@ public class Controller implements Initializable {
                     setOnEndOfMedia();
                     mediaPlayer.setVolume(sliderVolume.getValue() / 100);
                     mediaView.setMediaPlayer(mediaPlayer);
+                    isPaused = false;
+                    pausePlay.setText(">");
+                    mediaPlayer.play();
                     loadMusicSeeker();
                     songIndex = s.getIndex();
+
                 }
 
             }
@@ -401,7 +403,7 @@ public class Controller implements Initializable {
                         if (!changing) {
                             sliderSeeker.setValue(t1.toSeconds());
                         }
-                        timeStamp.setText(formatTime(t1.toSeconds()) + "/" +formatTime(mediaPlayer.getTotalDuration().toSeconds()));
+                        timeStamp.setText(formatTime(t1.toSeconds()) + "/" + formatTime(mediaPlayer.getTotalDuration().toSeconds()));
                     });
         });
     }
@@ -452,17 +454,6 @@ public class Controller implements Initializable {
         });
 
     }
-
-    public void loadTime() {
-        mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
-            @Override
-            public void changed(ObservableValue<? extends Duration> observableValue, Duration duration, Duration t1) {
-                timeStamp.setText(formatTime(t1.toSeconds()) + "/" +formatTime(mediaPlayer.getTotalDuration().toSeconds()));
-
-            }
-        });
-    }
-
     public String formatTime(double seconds) {
         int hours = (int) (seconds / 60 / 60);
         int mins = (int) (seconds / 60 % 60);
