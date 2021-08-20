@@ -11,10 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -57,7 +54,8 @@ public class Controller implements Initializable {
     private Button nextButton;
     @FXML
     private ImageView albumArt;
-
+    @FXML
+    private Label timeStamp;
 
 
     int repeatAmt = 1;
@@ -69,6 +67,8 @@ public class Controller implements Initializable {
     int changedSlider = 0;
     String saveSerialized = "playlists.txt";
     Playlist currentPlaylist;
+    double currentVolume;
+
 
 
     @Override
@@ -77,7 +77,7 @@ public class Controller implements Initializable {
         System.out.println("Starting up!");
         pausePlay.setText("||");
         updatePlaylists();
-
+        albumArt.setImage(new Image(getClass().getResourceAsStream("itunes-icloud-status-error-icon.png")));
         ArrayList<Playlist> p = PlaylistController.getRootPlaylist();
         ArrayList<Song> s = null;
         boolean loop = true;
@@ -101,10 +101,12 @@ public class Controller implements Initializable {
         mediaView.setMediaPlayer(mediaPlayer);
 
         sliderVolume.setValue(mediaPlayer.getVolume() * 100);
+        //currentVolume = mediaPlayer.getVolume() * 100;
         sliderVolume.valueProperty().addListener(new InvalidationListener() {
             @Override
             public void invalidated(Observable observable) {
                 mediaPlayer.setVolume(sliderVolume.getValue() / 100);
+                currentVolume = sliderVolume.getValue() / 100;
             }
         });
         loadMusicSeeker();
@@ -150,6 +152,7 @@ public class Controller implements Initializable {
         pausePlay.setText("||");
         mediaPlayer.pause();
 
+
         String name = songView.getSelectionModel().getSelectedItem();
         if(name != null) {
             ArrayList<Song> songs = currentPlaylist.getSongs();
@@ -160,6 +163,7 @@ public class Controller implements Initializable {
                     loadMetaData(media);
                     mediaPlayer = new MediaPlayer(media);
                     setOnEndOfMedia();
+                    mediaPlayer.setVolume(sliderVolume.getValue() / 100);
                     mediaView.setMediaPlayer(mediaPlayer);
                     loadMusicSeeker();
                     songIndex = s.getIndex();
@@ -168,6 +172,7 @@ public class Controller implements Initializable {
             }
         }
     }
+
 
     public void loadMetaData(Media media) {
         StringBuilder sb = new StringBuilder();
@@ -244,7 +249,7 @@ public class Controller implements Initializable {
                 PlaylistController.importPlaylist(choiceFile);
                 PlaylistController.saveRootPlaylist(saveSerialized);
             }
-            loadPlaylistItems();
+            updatePlaylists();
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("No File was Selected");
@@ -307,6 +312,7 @@ public class Controller implements Initializable {
         loadMetaData(media);
         loadMusicSeeker();
         setOnEndOfMedia();
+        mediaPlayer.setVolume(currentVolume);
         pausePlay.setText(">");
         mediaPlayer.play();
     }
@@ -347,6 +353,7 @@ public class Controller implements Initializable {
         loadMetaData(media);
         loadMusicSeeker();
         setOnEndOfMedia();
+        mediaPlayer.setVolume(currentVolume);
         pausePlay.setText(">");
         mediaPlayer.play();
     }
