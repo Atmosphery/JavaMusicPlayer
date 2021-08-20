@@ -112,9 +112,8 @@ public class Controller implements Initializable {
 
     @FXML
     public void onClickTableItem(MouseEvent mouse) {
-        pausePlay.setText("||");
         isPaused = true;
-        mediaPlayer.pause();
+        //mediaPlayer.pause();
         songView.getItems().clear();
         String name = playlistView.getSelectionModel().getSelectedItem();
         if (name != null){
@@ -125,14 +124,13 @@ public class Controller implements Initializable {
                 if (p.getPlaylistName().equals(name)){
                     playListIndex = 0;
                     songIndex = 0;
-                    songs = p.getSongs();
-                    if (songs.size() != 0){
-                        currentSong = songs.get(songIndex).getSong();
-                        media = new Media(currentSong.toURI().toString());
-                        loadMetaData(media);
-                        mediaPlayer = new MediaPlayer(media);
-                        mediaView.setMediaPlayer(mediaPlayer);
-                    }
+//                    if (songs.size() != 0){
+//                        currentSong = songs.get(songIndex).getSong();
+//                        media = new Media(currentSong.toURI().toString());
+//                        loadMetaData(media);
+//                        mediaPlayer = new MediaPlayer(media);
+//                        mediaView.setMediaPlayer(mediaPlayer);
+//                    }
                     loadMusicSeeker();
                     setOnEndOfMedia();
                     currentPlaylist = p;
