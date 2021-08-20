@@ -70,6 +70,7 @@ public class Controller implements Initializable {
     String saveSerialized = "playlists.txt";
     Playlist currentPlaylist;
     double currentVolume;
+    Image defaultImage = new Image(getClass().getResourceAsStream("itunes-icloud-status-error-icon.png"));
 
 
 
@@ -79,7 +80,7 @@ public class Controller implements Initializable {
         System.out.println("Starting up!");
         pausePlay.setText("||");
         updatePlaylists();
-        albumArt.setImage(new Image(getClass().getResourceAsStream("itunes-icloud-status-error-icon.png")));
+        albumArt.setImage(defaultImage);
         ArrayList<Playlist> p = PlaylistController.getRootPlaylist();
         ArrayList<Song> s = null;
         boolean loop = true;
@@ -179,6 +180,7 @@ public class Controller implements Initializable {
 
 
     public void loadMetaData(Media media) {
+        albumArt.setImage(defaultImage);
         StringBuilder sb = new StringBuilder();
         media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object > change) -> {
             if(change.wasAdded()){
