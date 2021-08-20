@@ -5,6 +5,8 @@ import Drivers.PlaylistController;
 import Drivers.Song;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
@@ -101,7 +103,6 @@ public class Controller implements Initializable {
         mediaView.setMediaPlayer(mediaPlayer);
 
         sliderVolume.setValue(mediaPlayer.getVolume() * 100);
-        //currentVolume = mediaPlayer.getVolume() * 100;
         sliderVolume.valueProperty().addListener(new InvalidationListener() {
             @Override
             public void invalidated(Observable observable) {
@@ -109,6 +110,7 @@ public class Controller implements Initializable {
                 currentVolume = sliderVolume.getValue() / 100;
             }
         });
+
         loadMusicSeeker();
     }
 
@@ -358,6 +360,9 @@ public class Controller implements Initializable {
         mediaPlayer.play();
     }
 
+
+
+
     public void loadMusicSeeker() {
         mediaPlayer.setOnReady(() -> {
             sliderSeeker.setMax(0.0);
@@ -369,6 +374,7 @@ public class Controller implements Initializable {
                         changing = t1;
                         if (!changing) {
                             mediaPlayer.seek(Duration.seconds(changedSlider));
+
                         }
                     });
             // Save the slider value when changing, but don't seek yet
@@ -395,6 +401,7 @@ public class Controller implements Initializable {
                         if (!changing) {
                             sliderSeeker.setValue(t1.toSeconds());
                         }
+                        timeStamp.setText(formatTime(t1.toSeconds()) + "/" +formatTime(mediaPlayer.getTotalDuration().toSeconds()));
                     });
         });
     }
@@ -443,5 +450,28 @@ public class Controller implements Initializable {
                     break;
             }
         });
+
+    }
+
+    public void loadTime() {
+        mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
+            @Override
+            public void changed(ObservableValue<? extends Duration> observableValue, Duration duration, Duration t1) {
+                timeStamp.setText(formatTime(t1.toSeconds()) + "/" +formatTime(mediaPlayer.getTotalDuration().toSeconds()));
+
+            }
+        });
+    }
+
+    public String formatTime(double seconds) {
+        int hours = (int) (seconds / 60 / 60);
+        int mins = (int) (seconds / 60 % 60);
+        int secs = (int) (seconds % 60);
+        String result = formatInt(mins) + ":" + formatInt(secs);
+        if (hours > 0) result = formatInt(hours) + ":" + result;
+        return result;
+    }
+    public String formatInt(int num) {
+        return String.format("%2s", num).replace(' ', '0');
     }
 }
