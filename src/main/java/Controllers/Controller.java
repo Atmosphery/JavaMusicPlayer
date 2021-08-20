@@ -64,7 +64,7 @@ public class Controller implements Initializable {
 
 
     int repeatAmt = 1;
-    boolean isPaused = false;
+    boolean isPaused = true;
     File currentSong;
     int playListIndex = 0;
     int songIndex = 0;
@@ -265,7 +265,7 @@ public class Controller implements Initializable {
         switch (repeatAmt) {
             case 1:
                 //Repeat Arraylist
-                repeat.setText("R1");
+                repeat.setText("");
                 repeatIcon.setIcon(FontAwesomeIcon.REPEAT);
                 break;
             case 2:
@@ -274,7 +274,7 @@ public class Controller implements Initializable {
                 break;
             default:
                 //No repeat
-                repeat.setText("R3");
+                repeat.setText("");
                 repeatIcon.setIcon(FontAwesomeIcon.TIMES);
                 repeatAmt = 0;
         }
