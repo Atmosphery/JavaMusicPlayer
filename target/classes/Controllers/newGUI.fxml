@@ -125,6 +125,11 @@
                   </Button>
                </children>
             </HBox>
+            <Button fx:id="shuffleButton" layoutX="45.0" layoutY="326.0" mnemonicParsing="false" onAction="#shuffleCurrentPlaylist" prefHeight="25.0" prefWidth="59.0">
+               <graphic>
+                  <FontAwesomeIconView fx:id="shuffleIcon" glyphName="RANDOM" size="24" />
+               </graphic>
+            </Button>
          </children>
       </AnchorPane>
    </children>

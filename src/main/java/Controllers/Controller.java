@@ -444,6 +444,7 @@ public class Controller implements Initializable {
                     //pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
                     mediaPlayer.play();
                     setOnEndOfMedia();
+                    songView.getSelectionModel().select(songIndex);
                     break;
                 case 2:
                     //Repeat Song
@@ -462,6 +463,7 @@ public class Controller implements Initializable {
                         loadMusicSeeker();
                         //pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
                         mediaPlayer.play();
+                        songView.getSelectionModel().select(songIndex);
                     }
                     break;
             }
