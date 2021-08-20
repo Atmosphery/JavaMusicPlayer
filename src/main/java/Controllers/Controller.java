@@ -35,12 +35,8 @@ public class Controller implements Initializable {
     private MediaView mediaView;
     private MediaPlayer mediaPlayer;
     private Media media;
-
-
     @FXML
     private Button pausePlay;
-    @FXML
-    private Button play;
     @FXML
     private Button repeat;
     @FXML
@@ -63,6 +59,9 @@ public class Controller implements Initializable {
     private Label timeStamp;
     @FXML
     private FontAwesomeIconView pausePlayIcon;
+    @FXML
+    private FontAwesomeIconView repeatIcon;
+
 
     int repeatAmt = 1;
     boolean isPaused = false;
@@ -146,8 +145,6 @@ public class Controller implements Initializable {
         isPaused = true;
         albumArt.setImage(null);
         mediaPlayer.pause();
-
-
         String name = songView.getSelectionModel().getSelectedItem();
         if(name != null) {
             ArrayList<Song> songs = currentPlaylist.getSongs();
@@ -267,16 +264,18 @@ public class Controller implements Initializable {
         repeatAmt++;
         switch (repeatAmt) {
             case 1:
-                //Repeat Song
+                //Repeat Arraylist
                 repeat.setText("R1");
+                repeatIcon.setIcon(FontAwesomeIcon.REPEAT);
                 break;
             case 2:
-                //Repeat Arraylist
+                //Repeat Song
                 repeat.setText("R2");
                 break;
             default:
                 //No repeat
                 repeat.setText("R3");
+                repeatIcon.setIcon(FontAwesomeIcon.TIMES);
                 repeatAmt = 0;
         }
     }
@@ -416,10 +415,6 @@ public class Controller implements Initializable {
         mediaPlayer.setOnEndOfMedia(() -> {
             switch (repeatAmt) {
                 case 1:
-                    //Repeat Song
-                    mediaPlayer.seek(Duration.ZERO);
-                    break;
-                case 2:
                     //Repeat Arraylist
                     //Maybe consider this being separate from the end of the song.
                     System.out.println("Playlist Check");
@@ -435,8 +430,14 @@ public class Controller implements Initializable {
                     mediaPlayer = new MediaPlayer(media);
                     loadMetaData(media);
                     loadMusicSeeker();
-                    pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
+                    mediaPlayer.setVolume(sliderVolume.getValue() / 100);
+                    //pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
                     mediaPlayer.play();
+                    setOnEndOfMedia();
+                    break;
+                case 2:
+                    //Repeat Song
+                    mediaPlayer.seek(Duration.ZERO);
                     break;
                 default:
                     //No repeat
@@ -447,8 +448,9 @@ public class Controller implements Initializable {
                         media = new Media(currentPlaylist.getSongs().get(songIndex).getSong().toURI().toString());
                         mediaPlayer = new MediaPlayer(media);
                         loadMetaData(media);
+                        mediaPlayer.setVolume(sliderVolume.getValue() / 100);
                         loadMusicSeeker();
-                        pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
+                        //pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
                         mediaPlayer.play();
                     }
                     break;
@@ -456,6 +458,7 @@ public class Controller implements Initializable {
         });
 
     }
+
     public String formatTime(double seconds) {
         int hours = (int) (seconds / 60 / 60);
         int mins = (int) (seconds / 60 % 60);

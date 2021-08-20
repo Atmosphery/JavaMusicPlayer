@@ -81,7 +81,7 @@
                         </Button>
                         <Button fx:id="repeat" layoutX="361.0" layoutY="171.0" mnemonicParsing="false" onAction="#onRepeatButtonPressed" prefHeight="40.0" prefWidth="76.0" style="-fx-background-radius: 15px;" AnchorPane.leftAnchor="361.0" AnchorPane.topAnchor="171.0">
                            <graphic>
-                              <FontAwesomeIconView fx:id="repeatImage" fill="#14213d" glyphName="TIMES" size="25" textAlignment="CENTER">
+                              <FontAwesomeIconView fx:id="repeatIcon" fill="#14213d" glyphName="REPEAT" size="25" textAlignment="CENTER">
                                  <font>
                                     <Font size="40.0" />
                                  </font>
