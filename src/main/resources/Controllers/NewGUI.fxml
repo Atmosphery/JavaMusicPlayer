@@ -111,7 +111,7 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <Button fx:id="createPlaylist1" layoutX="393.0" layoutY="264.0" mnemonicParsing="false" onAction="#refreshPlaylistItems" prefHeight="24.0" prefWidth="86.0" text="Refresh" textFill="#003049">
+            <Button fx:id="createPlaylist1" layoutX="379.0" layoutY="317.0" mnemonicParsing="false" onAction="#refreshPlaylistItems" prefHeight="24.0" prefWidth="86.0" text="Refresh" textFill="#003049">
                <font>
                   <Font name="SansSerif Regular" size="16.0" />
                </font>
@@ -125,9 +125,9 @@
                   </Button>
                </children>
             </HBox>
-            <Button fx:id="shuffleButton" layoutX="45.0" layoutY="326.0" mnemonicParsing="false" onAction="#shuffleCurrentPlaylist" prefHeight="25.0" prefWidth="59.0">
+            <Button fx:id="shuffleButton" layoutX="50.0" layoutY="316.0" mnemonicParsing="false" onAction="#onClickShuffle" prefHeight="25.0" prefWidth="59.0">
                <graphic>
-                  <FontAwesomeIconView fx:id="shuffleIcon" glyphName="RANDOM" size="24" />
+                  <FontAwesomeIconView fx:id="shuffleIcon" glyphName="BAN" size="24" />
                </graphic>
             </Button>
          </children>

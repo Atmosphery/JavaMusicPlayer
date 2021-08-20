@@ -82,7 +82,7 @@ public class Controller implements Initializable {
     ArrayList<Song> originalPlaylist;
     double currentVolume = 1.0;
     Image defaultImage = new Image(getClass().getResourceAsStream("noteIMG.png"));
-    boolean shuffle;
+    boolean shuffle = false;
 
 
     @Override
@@ -127,9 +127,10 @@ public class Controller implements Initializable {
 
     @FXML
     public void onClickTableItem(MouseEvent mouse) {
-        songView.getItems().clear();
+
         String name = playlistView.getSelectionModel().getSelectedItem();
-        if (name != null){
+        if (name != null && !name.equals(currentPlaylist.getPlaylistName())){
+            songView.getItems().clear();
             ArrayList<Playlist> playlist = PlaylistController.getRootPlaylist();
             ArrayList<Song> songs = new ArrayList<>();
             for (Playlist p: playlist){
@@ -139,9 +140,13 @@ public class Controller implements Initializable {
                     loadMusicSeeker();
                     setOnEndOfMedia();
                     currentPlaylist = p;
-                    songs = p.getSongs();
-                    for (Song s: songs){
-                        songView.getItems().add(s.getTitle());
+                    if (shuffle){
+                        shuffleCurrentPlaylist(true);
+                    }else{
+                        songs = p.getSongs();
+                        for (Song s: songs){
+                            songView.getItems().add(s.getTitle());
+                        }
                     }
                 }
             }
@@ -170,9 +175,7 @@ public class Controller implements Initializable {
                     mediaPlayer.play();
                     loadMusicSeeker();
                     songIndex = s.getIndex();
-
                 }
-
             }
         }
     }
@@ -483,14 +486,13 @@ public class Controller implements Initializable {
         return String.format("%2s", num).replace(' ', '0');
     }
 
-    public void shuffleCurrentPlaylist(){
+    @FXML
+    protected void onClickShuffle(){
+        shuffle = !shuffle;
+        shuffleCurrentPlaylist(shuffle);
+    }
 
-        if(!shuffle){
-            shuffle = true;
-        }else{
-            shuffle = false;
-        }
-
+    public void shuffleCurrentPlaylist(boolean shuffle){
         if (shuffle) {
             shuffleIcon.setIcon(FontAwesomeIcon.RANDOM);
             shuffleArrayList<Song> shuffler = new shuffleArrayList();
