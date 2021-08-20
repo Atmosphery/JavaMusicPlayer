@@ -23,6 +23,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Duration;
+import com.java.shuffleArrayList;
 
 import java.io.File;
 import java.net.URL;
@@ -62,6 +63,12 @@ public class Controller implements Initializable {
     @FXML
     private FontAwesomeIconView repeatIcon;
 
+    @FXML
+    private Button shuffleButton;
+    @FXML
+    private Button unshuffleButton;
+    @FXML
+    private FontAwesomeIconView shuffleIcon;
 
     int repeatAmt = 1;
     boolean isPaused = true;
@@ -72,9 +79,10 @@ public class Controller implements Initializable {
     int changedSlider = 0;
     String saveSerialized = "playlists.txt";
     Playlist currentPlaylist;
-    double currentVolume;
+    ArrayList<Song> originalPlaylist;
+    double currentVolume = 1.0;
     Image defaultImage = new Image(getClass().getResourceAsStream("noteIMG.png"));
-
+    boolean shuffle;
 
 
     @Override
@@ -320,6 +328,7 @@ public class Controller implements Initializable {
         mediaPlayer.setVolume(sliderVolume.getValue() / 100);
         pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
         mediaPlayer.play();
+        songView.getSelectionModel().select(songIndex);
     }
 
     @FXML
@@ -361,6 +370,7 @@ public class Controller implements Initializable {
         mediaPlayer.setVolume(sliderVolume.getValue() / 100);
         pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
         mediaPlayer.play();
+        songView.getSelectionModel().select(songIndex);
     }
 
 
@@ -470,4 +480,40 @@ public class Controller implements Initializable {
     public String formatInt(int num) {
         return String.format("%2s", num).replace(' ', '0');
     }
+
+    public void shuffleCurrentPlaylist(){
+
+        if(!shuffle){
+            shuffle = true;
+        }else{
+            shuffle = false;
+        }
+
+        if (shuffle) {
+            shuffleIcon.setIcon(FontAwesomeIcon.RANDOM);
+            shuffleArrayList<Song> shuffler = new shuffleArrayList();
+            originalPlaylist = (ArrayList<Song>) currentPlaylist.getSongs().clone();
+            shuffler.shuffleList(currentPlaylist.getSongs());
+
+            songView.getItems().clear();
+            ArrayList<Song> songs = currentPlaylist.getSongs();
+
+            for(Song s: songs){
+                songView.getItems().add(s.getTitle());
+            }
+
+        } else {
+            shuffleIcon.setIcon(FontAwesomeIcon.BAN);
+            currentPlaylist.setSongs(originalPlaylist);
+            songView.getItems().clear();
+            ArrayList<Song> songs = currentPlaylist.getSongs();
+
+            for(Song s: songs){
+                songView.getItems().add(s.getTitle());
+            }
+        }
+    }
+
+
+
 }

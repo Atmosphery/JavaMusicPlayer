@@ -108,6 +108,10 @@ public class Playlist implements Serializable {
         return playList;
     }
 
+    public void setSongs(ArrayList<Song> input){
+        this.playList = input;
+    }
+
     public void changePlaylistIndex(int change) {
         playlistIndex += change;
     }
