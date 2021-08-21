@@ -5,7 +5,6 @@ module com.example.musicplayer {
     requires javafx.media;
     requires de.jensd.fx.glyphs.fontawesome;
 
-
     opens Controllers to javafx.fxml;
     opens Drivers to java.base;
     exports Controllers;
