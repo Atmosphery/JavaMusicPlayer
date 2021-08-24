@@ -22,6 +22,9 @@ public class PlaylistController {
     }
 
     public static void importPlaylist(File playlist) {
+        if(rootPlaylist == null){
+            rootPlaylist = new ArrayList<>();
+        }
         Playlist newPlaylist = new Playlist(playlist);
         rootPlaylist.add(newPlaylist);
     }
@@ -33,7 +36,8 @@ public class PlaylistController {
 
     //Loads target serialized playlist file
     public static void loadRootPlaylist(String playlistPath) {
-        rootPlaylist =  readWrite.deserializePlaylist(playlistPath);
+        rootPlaylist = new ArrayList<>();
+        rootPlaylist = readWrite.deserializePlaylist(playlistPath);
     }
 
     //Saves rootPlaylist as a serialized file to target directory
@@ -42,15 +46,20 @@ public class PlaylistController {
     }
 
     //Lists all of the playlists in the rootPlaylist Array
-    public static void importAllPlaylists(String path) {
-        rootPlaylist = new ArrayList<>();
-        File temp = new File(path);
-        File[] tempArr = temp.listFiles();
+    public static void importAllPlaylists(String ... path) {
 
-        for(File f: tempArr){
-            Playlist newPlaylist = new Playlist(f);
-            rootPlaylist.add(newPlaylist);
+        rootPlaylist = new ArrayList<>();
+        for(String paths : path){
+            File temp = new File(paths);
+            File[] tempArr = temp.listFiles();
+            for(File f: tempArr){
+                Playlist newPlaylist = new Playlist(f);
+                rootPlaylist.add(newPlaylist);
+            }
         }
+
+
+
     }
 
     //returns a single Playlist by passing in a playlist name

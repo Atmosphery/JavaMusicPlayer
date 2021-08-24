@@ -25,6 +25,7 @@ import javafx.util.Duration;
 import com.java.shuffleArrayList;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -82,15 +83,35 @@ public class Controller implements Initializable {
     double currentVolume = 1.0;
     Image defaultImage = new Image(getClass().getResourceAsStream("noteIMG.png"));
     boolean shuffle = false;
-
+    File choiceFile = null;
+    boolean initialize = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        File init = new File(saveSerialized);
+        try {
+            if(init.createNewFile()){
+                System.out.println("Playlist storage created: " + init.getAbsolutePath());
+            }else{
+                System.out.println("File already exists.");
+                PlaylistController.loadRootPlaylist(saveSerialized);
+                if(PlaylistController.getRootPlaylist() != null){
+                    updatePlaylists();
+                    loadPlaylistItems();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         System.out.println("Starting up!");
         pausePlayIcon.setIcon(FontAwesomeIcon.PAUSE);
-        updatePlaylists();
         albumArt.setImage(defaultImage);
+    }
+
+    public void initPlaylist(){
         ArrayList<Playlist> p = PlaylistController.getRootPlaylist();
         ArrayList<Song> s = null;
         boolean loop = true;
@@ -121,11 +142,30 @@ public class Controller implements Initializable {
                 currentVolume = sliderVolume.getValue() / 100;
             }
         });
+
+        ArrayList<Song> songs = new ArrayList<Song>();
+
+        if(shuffle){
+            shuffleCurrentPlaylist(true);
+        }else{
+            songs = currentPlaylist.getSongs();
+            for (Song s1 : songs){
+                songView.getItems().add(s1.getTitle());
+            }
+        }
+
         loadMusicSeeker();
+        updatePlaylists();
     }
+
 
     @FXML
     public void onClickTableItem(MouseEvent mouse) {
+
+        if(!initialize){
+            initPlaylist();
+            initialize = true;
+        }
 
         String name = playlistView.getSelectionModel().getSelectedItem();
         if (name != null && !name.equals(currentPlaylist.getPlaylistName())){
@@ -154,6 +194,7 @@ public class Controller implements Initializable {
 
     @FXML
     public void onClickSongItem(MouseEvent mouse) {
+
         isPaused = true;
         albumArt.setImage(null);
         mediaPlayer.pause();
@@ -210,7 +251,12 @@ public class Controller implements Initializable {
     }
 
     public void updatePlaylists() {
-        PlaylistController.importAllPlaylists("Playlists");
+        /*if(choiceFile != null){
+            PlaylistController.importAllPlaylists("Playlists", choiceFile.getAbsolutePath());
+        }else{
+            PlaylistController.importAllPlaylists("Playlists");
+        }*/
+
         PlaylistController.saveRootPlaylist(saveSerialized);
         PlaylistController.loadRootPlaylist(saveSerialized);
         loadPlaylistItems();
@@ -243,7 +289,7 @@ public class Controller implements Initializable {
     @FXML
     protected void onFileButtonPressed() {
         File playlistPath = new File(PlaylistController.getRootPlaylistPath());
-        File choiceFile = null;
+
         DirectoryChooser dc = new DirectoryChooser();
         boolean loop = true;
         while (loop) {
@@ -259,6 +305,7 @@ public class Controller implements Initializable {
         try {
             choiceFile = dc.showDialog(null);
             if (choiceFile != null){
+
                 PlaylistController.importPlaylist(choiceFile);
                 PlaylistController.saveRootPlaylist(saveSerialized);
             }
