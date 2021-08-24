@@ -46,17 +46,16 @@ public class PlaylistController {
     }
 
     //Lists all of the playlists in the rootPlaylist Array
-    public static void importAllPlaylists(String ... path) {
-
+    public static void importAllPlaylists() {
         rootPlaylist = new ArrayList<>();
-        for(String paths : path){
-            File temp = new File(paths);
-            File[] tempArr = temp.listFiles();
-            for(File f: tempArr){
-                Playlist newPlaylist = new Playlist(f);
-                rootPlaylist.add(newPlaylist);
-            }
+        File temp = new File(rootPlaylistPath);
+        File[] tempArr = temp.listFiles();
+        for(File f: tempArr){
+            Playlist newPlaylist = new Playlist(f);
+            rootPlaylist.add(newPlaylist);
         }
+
+
 
 
 

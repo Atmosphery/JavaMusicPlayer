@@ -88,6 +88,10 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        File test = new File(PlaylistController.getRootPlaylistPath());
+        if (!test.isDirectory()) {
+            test.mkdirs();
+        }
 
         File init = new File(saveSerialized);
         try {
@@ -127,7 +131,6 @@ public class Controller implements Initializable {
 
         currentPlaylist = new Playlist(p.get(playListIndex).getPlaylistFile());
         currentSong = s.get(songIndex).getSong();
-
         media = new Media (currentSong.toURI().toString());
         loadMetaData(media);
         mediaPlayer = new MediaPlayer(media);
@@ -251,12 +254,7 @@ public class Controller implements Initializable {
     }
 
     public void updatePlaylists() {
-        /*if(choiceFile != null){
-            PlaylistController.importAllPlaylists("Playlists", choiceFile.getAbsolutePath());
-        }else{
-            PlaylistController.importAllPlaylists("Playlists");
-        }*/
-
+        PlaylistController.importAllPlaylists();
         PlaylistController.saveRootPlaylist(saveSerialized);
         PlaylistController.loadRootPlaylist(saveSerialized);
         loadPlaylistItems();
@@ -288,16 +286,14 @@ public class Controller implements Initializable {
 
     @FXML
     protected void onFileButtonPressed() {
-        File test = new File("Playlists\\");
+        File test = new File(PlaylistController.getRootPlaylistPath());
         File playlistPath;
         if (test.isDirectory()) {
-            playlistPath = new File(PlaylistController.getRootPlaylistPath());
+            playlistPath = test;
         }else {
             test.mkdirs();
-            playlistPath = new File(PlaylistController.getRootPlaylistPath());
+            playlistPath = test;
         }
-
-
         DirectoryChooser dc = new DirectoryChooser();
         boolean loop = true;
         while (loop) {
