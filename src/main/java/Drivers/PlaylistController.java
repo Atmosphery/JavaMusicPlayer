@@ -17,7 +17,7 @@ public class PlaylistController {
 
     public static void importPlaylist(String playlistPath) {
         File newPlaylistFile = new File(playlistPath);
-        Playlist newPlaylist = new Playlist(newPlaylistFile);
+        Playlist newPlaylist = new Playlist(newPlaylistFile, rootPlaylist.size() + 1);
         rootPlaylist.add(newPlaylist);
     }
 
@@ -25,7 +25,7 @@ public class PlaylistController {
         if(rootPlaylist == null){
             rootPlaylist = new ArrayList<>();
         }
-        Playlist newPlaylist = new Playlist(playlist);
+        Playlist newPlaylist = new Playlist(playlist, rootPlaylist.size() + 1);
         rootPlaylist.add(newPlaylist);
     }
 
@@ -50,8 +50,10 @@ public class PlaylistController {
         rootPlaylist = new ArrayList<>();
         File temp = new File(rootPlaylistPath);
         File[] tempArr = temp.listFiles();
+        int index = 0;
         for(File f: tempArr){
-            Playlist newPlaylist = new Playlist(f);
+            Playlist newPlaylist = new Playlist(f, index);
+            index++;
             rootPlaylist.add(newPlaylist);
         }
 

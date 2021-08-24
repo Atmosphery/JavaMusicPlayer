@@ -129,7 +129,7 @@ public class Controller implements Initializable {
             }
         }
 
-        currentPlaylist = new Playlist(p.get(playListIndex).getPlaylistFile());
+        currentPlaylist = new Playlist(p.get(playListIndex).getPlaylistFile(), playListIndex);
         currentSong = s.get(songIndex).getSong();
         media = new Media (currentSong.toURI().toString());
         loadMetaData(media);
@@ -177,7 +177,7 @@ public class Controller implements Initializable {
             ArrayList<Song> songs = new ArrayList<>();
             for (Playlist p: playlist){
                 if (p.getPlaylistName().equals(name)){
-                    playListIndex = 0;
+                    playListIndex = p.getPlaylistIndex();
                     songIndex = 0;
                     loadMusicSeeker();
                     setOnEndOfMedia();
@@ -264,6 +264,7 @@ public class Controller implements Initializable {
     protected void refreshPlaylistItems() {
         songView.getItems().clear();
         updatePlaylists();
+        currentPlaylist = PlaylistController.getRootPlaylist().get(playListIndex);
         ArrayList<Song> songs = currentPlaylist.getSongs();
         for (Song s: songs){
             songView.getItems().add(s.getTitle());
