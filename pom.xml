@@ -74,7 +74,10 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.example.musicplayer/Controllers.MainApplication</mainClass>
+                            <mainClass>Controllers.MainApplication</mainClass>
+                            <launcher>Controllers.MainApplication</launcher>
+                            <jlinkImageName>MusicPlayer</jlinkImageName>
+                            <jlinkZipName>appZip</jlinkZipName>
                         </configuration>
                     </execution>
                 </executions>

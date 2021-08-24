@@ -12,7 +12,7 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         Image icon = new Image(String.valueOf(getClass().getResource("Music-icon.png")));
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("newGUI.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("NewGUI.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 500, 800);
         stage.setTitle("The Best Java Music Player");
         stage.getIcons().add(icon);
@@ -21,7 +21,6 @@ public class MainApplication extends Application {
     }
 
     public static void main(String[] args) {
-
         launch();
     }
 }
