@@ -255,6 +255,10 @@ public class Controller implements Initializable {
 
     public void updatePlaylists() {
         PlaylistController.importAllPlaylists();
+        ArrayList<Playlist> temp = PlaylistController.getRootPlaylist();
+        for(Playlist p: temp){
+            playListIndex = p.getPlaylistIndex();
+        }
         PlaylistController.saveRootPlaylist(saveSerialized);
         PlaylistController.loadRootPlaylist(saveSerialized);
         loadPlaylistItems();

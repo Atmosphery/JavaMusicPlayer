@@ -1,5 +1,7 @@
 package Drivers;
 
+import Controllers.Controller;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -37,7 +39,15 @@ public class PlaylistController {
     //Loads target serialized playlist file
     public static void loadRootPlaylist(String playlistPath) {
         rootPlaylist = new ArrayList<>();
-        rootPlaylist = readWrite.deserializePlaylist(playlistPath);
+
+        File temp = new File(playlistPath);
+
+        if(temp.exists()){
+            rootPlaylist = readWrite.deserializePlaylist(playlistPath);
+        }else{
+            System.out.println("Nonexistent path given, please check the paths");
+        }
+
     }
 
     //Saves rootPlaylist as a serialized file to target directory
@@ -47,19 +57,37 @@ public class PlaylistController {
 
     //Lists all of the playlists in the rootPlaylist Array
     public static void importAllPlaylists() {
-        rootPlaylist = new ArrayList<>();
-        File temp = new File(rootPlaylistPath);
-        File[] tempArr = temp.listFiles();
-        int index = 0;
-        for(File f: tempArr){
-            Playlist newPlaylist = new Playlist(f, index);
-            index++;
-            rootPlaylist.add(newPlaylist);
+        File checkForTXTFile = new File("playlists.txt");
+
+        if(checkForTXTFile.exists()){
+            rootPlaylist = readWrite.deserializePlaylist(checkForTXTFile.getPath());
+
+            rootPlaylist.removeIf(list -> !list.getPlaylistFile().exists());
+
+            int indexRecount = 0;
+
+            for(Playlist p : rootPlaylist){
+                p.setPlaylistIndex(indexRecount);
+                indexRecount++;
+            }
+
+        }else{
+            try{
+                checkForTXTFile.createNewFile();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+            rootPlaylist = new ArrayList<>();
+            File temp = new File(rootPlaylistPath);
+            File[] tempArr = temp.listFiles();
+            int index = 0;
+            for(File f: tempArr){
+                Playlist newPlaylist = new Playlist(f, index);
+                index++;
+                rootPlaylist.add(newPlaylist);
+            }
         }
-
-
-
-
 
     }
 
