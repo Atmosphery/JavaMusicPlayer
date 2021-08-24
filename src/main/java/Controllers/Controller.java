@@ -288,7 +288,15 @@ public class Controller implements Initializable {
 
     @FXML
     protected void onFileButtonPressed() {
-        File playlistPath = new File(PlaylistController.getRootPlaylistPath());
+        File test = new File("Playlists\\");
+        File playlistPath;
+        if (test.isDirectory()) {
+            playlistPath = new File(PlaylistController.getRootPlaylistPath());
+        }else {
+            test.mkdirs();
+            playlistPath = new File(PlaylistController.getRootPlaylistPath());
+        }
+
 
         DirectoryChooser dc = new DirectoryChooser();
         boolean loop = true;
