@@ -473,6 +473,7 @@ public class Controller implements Initializable {
                             sliderSeeker.setValue(t1.toSeconds());
                         }
                         timeStamp.setText(formatTime(t1.toSeconds()) + "/" + formatTime(mediaPlayer.getTotalDuration().toSeconds()));
+
                     });
         });
     }
@@ -519,9 +520,10 @@ public class Controller implements Initializable {
                         loadMetaData(media);
                         mediaPlayer.setVolume(sliderVolume.getValue() / 100);
                         loadMusicSeeker();
-                        //pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
+                        pausePlayIcon.setIcon(FontAwesomeIcon.PAUSE);
                         mediaPlayer.play();
                         songView.getSelectionModel().select(songIndex);
+
                     }
                     break;
             }
@@ -559,7 +561,12 @@ public class Controller implements Initializable {
 
             for(Song s: songs){
                 songView.getItems().add(s.getTitle());
+                if (s.getSong() == currentSong) {
+                    songView.getSelectionModel().select(currentSong.getName());
+                }
+
             }
+
 
         } else {
             shuffleIcon.setIcon(FontAwesomeIcon.BAN);
@@ -570,6 +577,7 @@ public class Controller implements Initializable {
             for(Song s: songs){
                 songView.getItems().add(s.getTitle());
             }
+            songView.getSelectionModel().select(songIndex);
         }
     }
 

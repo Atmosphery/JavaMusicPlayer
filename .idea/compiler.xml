@@ -17,12 +17,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="test" />
+        <module name="MP3Player" />
         <module name="JavaMusicPlayer" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="test" target="16" />
+      <module name="MP3Player" target="16" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

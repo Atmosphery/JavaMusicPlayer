@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Main-Class: Controllers.Launcher
+Class-Path: javafx-controls-16-win.jar javafx-media-16-win.jar fontaweso
+ mefx-fontawesome-4.7.0-9.1.2.jar javafx-base-16.jar javafx-base-16-win.
+ jar javafx-fxml-16.jar javafx-graphics-16.jar javafx-controls-16.jar ja
+ vafx-fxml-16-win.jar javafx-graphics-16-win.jar javafx-media-16.jar fon
+ tawesomefx-commons-9.1.2.jar
+
