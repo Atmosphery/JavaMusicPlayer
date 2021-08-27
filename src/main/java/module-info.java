@@ -4,6 +4,8 @@ module com.example.musicplayer {
     requires javafx.graphics;
     requires javafx.media;
     requires de.jensd.fx.glyphs.fontawesome;
+    requires javafx.swing;
+    requires jaudiotagger;
 
 
     opens Controllers to javafx.fxml;
