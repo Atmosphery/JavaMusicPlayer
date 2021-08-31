@@ -50,6 +50,19 @@ public class PlaylistController {
 
     }
 
+    public static Playlist scanPlaylist(Playlist currentPlaylist) {
+        File directoryPlaylist = new File(currentPlaylist.getPlaylistFile().getPath());
+        ArrayList<Song> oldPlaylist = currentPlaylist.getPlayList();
+        Playlist updated = null;
+        int currentIndex = currentPlaylist.getPlaylistIndex();
+        if (oldPlaylist.size() != directoryPlaylist.listFiles().length){
+            rootPlaylist.remove(currentPlaylist);
+            updated = new Playlist(directoryPlaylist, currentIndex);
+            rootPlaylist.add(updated);
+        }
+        return updated;
+    }
+
     //Saves rootPlaylist as a serialized file to target directory
     public static void saveRootPlaylist(String playlistPath) {
         readWrite.writeToDirectory(rootPlaylist, playlistPath);
@@ -77,7 +90,6 @@ public class PlaylistController {
             }catch(Exception e){
                 e.printStackTrace();
             }
-
             rootPlaylist = new ArrayList<>();
             File temp = new File(rootPlaylistPath);
             File[] tempArr = temp.listFiles();

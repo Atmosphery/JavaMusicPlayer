@@ -255,9 +255,10 @@ public class Controller implements Initializable {
 
     public void updatePlaylists() {
         PlaylistController.importAllPlaylists();
-        ArrayList<Playlist> temp = PlaylistController.getRootPlaylist();
-        for(Playlist p: temp){
-            playListIndex = p.getPlaylistIndex();
+        if(currentPlaylist == null){
+            playListIndex = 0;
+        }else {
+            playListIndex = currentPlaylist.getPlaylistIndex();
         }
         PlaylistController.saveRootPlaylist(saveSerialized);
         PlaylistController.loadRootPlaylist(saveSerialized);
@@ -267,8 +268,10 @@ public class Controller implements Initializable {
     @FXML
     protected void refreshPlaylistItems() {
         songView.getItems().clear();
+        if (PlaylistController.scanPlaylist(currentPlaylist) != null){
+            currentPlaylist = PlaylistController.scanPlaylist(currentPlaylist);
+        }
         updatePlaylists();
-        currentPlaylist = PlaylistController.getRootPlaylist().get(playListIndex);
         ArrayList<Song> songs = currentPlaylist.getSongs();
         for (Song s: songs){
             songView.getItems().add(s.getTitle());
