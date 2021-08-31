@@ -3,6 +3,7 @@ Drivers\Song.class
 Drivers\Playlist.class
 module-info.class
 com\java\shuffleArray.class
+Controllers\Launcher.class
 Controllers\Controller$1.class
 com\java\shuffleArrayList.class
 Drivers\readWrite.class

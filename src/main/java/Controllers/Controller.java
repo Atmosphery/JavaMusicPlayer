@@ -23,9 +23,29 @@ import javafx.scene.media.MediaView;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Duration;
 import com.java.shuffleArrayList;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.AudioHeader;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.audio.mp4.Mp4FileReader;
+import org.jaudiotagger.audio.wav.WavFileReader;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.TagException;
+import javafx.embed.swing.SwingFXUtils;
+import org.jaudiotagger.tag.images.Artwork;
+import org.jaudiotagger.tag.wav.WavTag;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -214,7 +234,7 @@ public class Controller implements Initializable {
                     mediaPlayer.setVolume(sliderVolume.getValue() / 100);
                     mediaView.setMediaPlayer(mediaPlayer);
                     isPaused = false;
-                    pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
+                    pausePlayIcon.setIcon(FontAwesomeIcon.PAUSE);
                     mediaPlayer.play();
                     loadMusicSeeker();
                     songIndex = s.getIndex();
@@ -227,20 +247,80 @@ public class Controller implements Initializable {
     public void loadMetaData(Media media) {
         albumArt.setImage(defaultImage);
         StringBuilder sb = new StringBuilder();
-        media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object > change) -> {
-            if(change.wasAdded()){
-                if("title".equals(change.getKey())){
-                    sb.append("Title: ").append(change.getValueAdded().toString()).append("\n");
-                }else if("artist".equals(change.getKey())){
-                    sb.append("Artist: ").append(change.getValueAdded().toString()).append("\n");
-                }else if("album".equals(change.getKey())){
-                    sb.append("Album: ").append(change.getValueAdded().toString()).append("\n");
-                }else if("image".equals(change.getKey())){
-                    albumArt.setImage((Image) change.getValueAdded());
+        if(media.getSource().contains(".mp3")){
+            media.getMetadata().addListener((MapChangeListener.Change<? extends String, ? extends Object > change) -> {
+                if(change.wasAdded()){
+                    if("title".equals(change.getKey())){
+                        sb.append("Title: ").append(change.getValueAdded().toString()).append("\n");
+                    }else if("artist".equals(change.getKey())){
+                        sb.append("Artist: ").append(change.getValueAdded().toString()).append("\n");
+                    }else if("album".equals(change.getKey())){
+                        sb.append("Album: ").append(change.getValueAdded().toString()).append("\n");
+                    }else if("image".equals(change.getKey())){
+                        albumArt.setImage((Image) change.getValueAdded());
+                    }
+                    metaDisplay.setText(sb.toString());
                 }
-                metaDisplay.setText(sb.toString());
+            });
+        }else if(media.getSource().contains(".m4a")){
+            String source = media.getSource();
+            source = source.replace("file:","");
+            source = source.replaceAll("%20", " ");
+            File m4aMetadataSource = new File(source);
+            AudioFile file = null;
+            try {
+
+                file = AudioFileIO.read(m4aMetadataSource);
+                Tag tags = file.getTagOrCreateAndSetDefault();
+                StringBuilder M4aBuilder = new StringBuilder();
+
+                System.out.println(tags.getFieldCount());
+
+
+
+                M4aBuilder.append("Title: ").append(tags.getValue(FieldKey.TITLE, 0))
+                        .append("\nArtist: ").append(tags.getValue(FieldKey.ARTIST,0))
+                        .append("\nAlbum: ").append(tags.getValue(FieldKey.ALBUM,0));
+                metaDisplay.setText(M4aBuilder.toString());
+
+                Artwork test = tags.getFirstArtwork();
+                if(test != null){
+                    albumArt.setImage(SwingFXUtils.toFXImage((BufferedImage) test.getImage(),null));
+                }
+            } catch (Exception e){
+                e.printStackTrace();
             }
-        });
+        }else if(media.getSource().contains(".wav")){
+            String source = media.getSource();
+            source = source.replace("file:","");
+            source = source.replaceAll("%20", " ");
+            File wavMetaDataSource = new File(source);
+
+            try{
+                AudioFile file = AudioFileIO.read(wavMetaDataSource);
+                WavTag tags = (WavTag) file.getTag();
+
+                StringBuilder wavBuilder = new StringBuilder();
+
+                wavBuilder.append("Title: ").append(tags.getFirst(FieldKey.TITLE))
+                        .append("\nArtist: ").append(tags.getFirst(FieldKey.ARTIST))
+                        .append("\nAlbum: ").append(tags.getFirst(FieldKey.ALBUM));
+                metaDisplay.setText(wavBuilder.toString());
+
+                Artwork test = tags.getFirstArtwork();
+                if(test != null){
+                    albumArt.setImage(SwingFXUtils.toFXImage((BufferedImage) test.getImage(),null));
+                }
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+
+
+        }
+
 
     }
 
@@ -273,6 +353,7 @@ public class Controller implements Initializable {
         }
         updatePlaylists();
         ArrayList<Song> songs = currentPlaylist.getSongs();
+        songView.getItems().clear();
         for (Song s: songs){
             songView.getItems().add(s.getTitle());
         }
@@ -283,12 +364,12 @@ public class Controller implements Initializable {
         isPaused = !isPaused;
         if (isPaused) {
             mediaPlayer.pause();
-            pausePlayIcon.setIcon(FontAwesomeIcon.PAUSE);
+            pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
 
         }
         else {
             mediaPlayer.play();
-            pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
+            pausePlayIcon.setIcon(FontAwesomeIcon.PAUSE);
         }
     }
 
@@ -476,6 +557,7 @@ public class Controller implements Initializable {
                             sliderSeeker.setValue(t1.toSeconds());
                         }
                         timeStamp.setText(formatTime(t1.toSeconds()) + "/" + formatTime(mediaPlayer.getTotalDuration().toSeconds()));
+
                     });
         });
     }
@@ -522,9 +604,12 @@ public class Controller implements Initializable {
                         loadMetaData(media);
                         mediaPlayer.setVolume(sliderVolume.getValue() / 100);
                         loadMusicSeeker();
-                        //pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
+                        pausePlayIcon.setIcon(FontAwesomeIcon.PAUSE);
                         mediaPlayer.play();
                         songView.getSelectionModel().select(songIndex);
+                    }else{
+                        pausePlayIcon.setIcon(FontAwesomeIcon.PLAY);
+
                     }
                     break;
             }
@@ -562,7 +647,12 @@ public class Controller implements Initializable {
 
             for(Song s: songs){
                 songView.getItems().add(s.getTitle());
+                if (s.getSong() == currentSong) {
+                    songView.getSelectionModel().select(currentSong.getName());
+                }
+
             }
+
 
         } else {
             shuffleIcon.setIcon(FontAwesomeIcon.BAN);
@@ -573,6 +663,7 @@ public class Controller implements Initializable {
             for(Song s: songs){
                 songView.getItems().add(s.getTitle());
             }
+            songView.getSelectionModel().select(songIndex);
         }
     }
 
