@@ -1,8 +1,9 @@
 Manifest-Version: 1.0
 Main-Class: Controllers.Launcher
-Class-Path: javafx-fxml-16.jar fontawesomefx-commons-9.1.2.jar javafx-ba
- se-16.jar javafx-base-16-win.jar javafx-graphics-16-win.jar javafx-cont
- rols-16.jar javafx-graphics-16.jar javafx-fxml-16-win.jar javafx-media-
- 16.jar javafx-controls-16-win.jar fontawesomefx-fontawesome-4.7.0-9.1.2
- .jar javafx-media-16-win.jar
+Class-Path: javafx-media-16-win.jar javafx-controls-16.jar javafx-graphi
+ cs-16-win.jar javafx-fxml-16-win.jar javafx-media-16.jar fontawesomefx-
+ commons-9.1.2.jar javafx-swing-16-win.jar javafx-swing-16.jar javafx-fx
+ ml-16.jar javafx-graphics-16.jar javafx-base-16.jar javafx-controls-16-
+ win.jar fontawesomefx-fontawesome-4.7.0-9.1.2.jar jaudiotagger-2.2.5.ja
+ r javafx-base-16-win.jar
 
